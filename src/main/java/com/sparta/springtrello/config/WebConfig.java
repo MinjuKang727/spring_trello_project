@@ -1,5 +1,6 @@
 package com.sparta.springtrello.config;
 
+import com.sparta.springtrello.common.module.Aspect;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,5 +26,11 @@ public class WebConfig {
                 );
 
         return http.build();
+    }
+
+    //AOP 등록
+    @Bean
+    public Aspect getAspect() {
+        return new Aspect();
     }
 }
