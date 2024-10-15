@@ -16,9 +16,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Workspace {
+
     @Id
+    @Column(name = "workspace_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long workspace_id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -36,11 +38,11 @@ public class Workspace {
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
     private List<Member> memberList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
-    private List<Board> boardList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
-    private List<Notification> notificationList = new ArrayList<>();
+//    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+//    private List<Board> boardList = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+//    private List<Notification> notificationList = new ArrayList<>();
 
     public Workspace(String name, String description, User user) {
         this.name = name;

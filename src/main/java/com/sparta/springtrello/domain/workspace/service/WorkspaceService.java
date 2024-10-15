@@ -43,7 +43,7 @@ public class WorkspaceService {
         Workspace savedWorkspace = workspaceRepository.save(newWorkspace);
 
         return new WorkspaceResponseDto(
-                savedWorkspace.getWorkspace_id(),
+                savedWorkspace.getId(),
                 savedWorkspace.getName(),
                 savedWorkspace.getDescription()
         );
@@ -57,7 +57,7 @@ public class WorkspaceService {
 
         // workspace의 멤버 목록에 authUser가 포함되어 있는지 확인
         boolean isMember = workspace.getMemberList().stream()
-                .anyMatch(member -> member.getUser().getUserId().equals(authUser.getId()));
+                .anyMatch(member -> member.getUser().getId().equals(authUser.getId()));
 
         // authUser가 멤버가 아니면 예외 발생
         if (!isMember) {
@@ -65,7 +65,7 @@ public class WorkspaceService {
         }
 
         return new WorkspaceResponseDto(
-                workspace.getWorkspace_id(),
+                workspace.getId(),
                 workspace.getName(),
                 workspace.getDescription()
         );
@@ -78,7 +78,7 @@ public class WorkspaceService {
 
         for (Workspace workspace : workspaces) {
             WorkspaceResponseDto responseDto = new WorkspaceResponseDto(
-                    workspace.getWorkspace_id(),
+                    workspace.getId(),
                     workspace.getName(),
                     workspace.getDescription()
             );
@@ -101,7 +101,7 @@ public class WorkspaceService {
         );
         workspaceRepository.save(workspace);
         return new WorkspaceResponseDto(
-                workspace.getWorkspace_id(),
+                workspace.getId(),
                 workspace.getName(),
                 workspace.getDescription()
         );

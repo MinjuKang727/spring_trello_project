@@ -46,7 +46,7 @@ public class MemberService {
         );
         memberRepository.save(member);
         return new MemberResponseDto(
-                member.getWorkspace().getWorkspace_id(),
+                member.getWorkspace().getId(),
                 member.getInvitationStatus(),
                 member.getMemberRole()
         );
@@ -62,7 +62,7 @@ public class MemberService {
         member.updateInvitationStatus(InvitationStatus.ACCEPT);
 
         return new MemberResponseDto(
-                member.getWorkspace().getWorkspace_id(),
+                member.getWorkspace().getId(),
                 member.getInvitationStatus(),
                 member.getMemberRole()
         );
@@ -80,7 +80,7 @@ public class MemberService {
         member.updateRole(requestDto.getMemberRole());
 
         return new MemberResponseDto(
-                member.getWorkspace().getWorkspace_id(),
+                member.getWorkspace().getId(),
                 member.getInvitationStatus(),
                 member.getMemberRole()
         );
