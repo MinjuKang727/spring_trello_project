@@ -1,6 +1,6 @@
-package com.sparta.springtrello.domain.list.repository;
+package com.sparta.springtrello.domain.deck.repository;
 
-import com.sparta.springtrello.domain.list.entity.Deck;
+import com.sparta.springtrello.domain.deck.entity.Deck;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

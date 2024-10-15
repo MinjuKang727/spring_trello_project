@@ -1,4 +1,4 @@
-package com.sparta.springtrello.domain.list.repository;
+package com.sparta.springtrello.domain.deck.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

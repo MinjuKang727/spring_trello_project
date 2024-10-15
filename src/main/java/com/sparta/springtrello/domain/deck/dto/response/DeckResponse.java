@@ -1,4 +1,4 @@
-package com.sparta.springtrello.domain.list.dto.response;
+package com.sparta.springtrello.domain.deck.dto.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

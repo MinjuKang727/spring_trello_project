@@ -18,7 +18,8 @@ public class Notification extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long notificationId;
+    @Column(name = "notification_id")
+    private Long id;
     private NotificationCategory category;
     private String message;
     private Boolean isDeleted;
