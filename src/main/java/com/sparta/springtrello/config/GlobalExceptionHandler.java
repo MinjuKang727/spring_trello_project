@@ -4,7 +4,7 @@ import com.sparta.springtrello.common.ApiResponse;
 import com.sparta.springtrello.common.ReasonDto;
 import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.common.exception.InvalidRequestException;
-import jakarta.security.auth.message.AuthException;
+import jakarta.validation.constraints.Null;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,12 +31,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<String>> handleApiException(ApiException ex) {
         ReasonDto status = ex.getErrorCode().getReasonHttpStatus();
         return getErrorResponse(status.getHttpStatus(), status.getMessage());
-    }
-
-    @ExceptionHandler(AuthException.class)
-    public ResponseEntity<ApiResponse<String>> handleAuthException(AuthException ex) {
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        return getErrorResponse(status, ex.getMessage());
     }
 
     public ResponseEntity<ApiResponse<String>> getErrorResponse(HttpStatus status, String message) {
