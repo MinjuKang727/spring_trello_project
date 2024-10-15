@@ -2,20 +2,17 @@ package com.sparta.springtrello.domain.auth.service;
 
 import com.sparta.springtrello.common.exception.AuthException;
 import com.sparta.springtrello.config.JwtUtil;
-import com.sparta.springtrello.domain.auth.dto.SigninResponseDto;
 import com.sparta.springtrello.domain.auth.dto.SigninRequestDto;
+import com.sparta.springtrello.domain.auth.dto.SigninResponseDto;
 import com.sparta.springtrello.domain.auth.dto.SignupRequestDto;
 import com.sparta.springtrello.domain.auth.dto.SignupResponseDto;
 import com.sparta.springtrello.domain.user.entity.User;
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import com.sparta.springtrello.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -31,23 +28,9 @@ public class AuthService {
     // 회원가입
     public SignupResponseDto signup(SignupRequestDto request) {
 
-        String email = request.getEmail();
-
-        // 이메일 유효성 검사
-        if(!validateEmail(email)) {
-            throw new IllegalArgumentException("이메일 형식이 올바르지 않습니다.");
-        }
-
         // 이메일 중복 검사
         if(userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
-        }
-
-        String password = request.getPassword();
-
-        // 비밀번호 유효성 검사
-        if(!validatePassword(password)) {
-            throw new IllegalArgumentException("비밀번호 형식이 올바르지 않습니다.");
         }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
@@ -66,7 +49,7 @@ public class AuthService {
         }
 
         User user = new User(
-                email,
+                request.getEmail(),
                 encodedPassword,
                 request.getNickname(),
                 userRole
@@ -84,6 +67,10 @@ public class AuthService {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() ->
                 new IllegalArgumentException("가입되지 않은 유저입니다."));
 
+        if(user.isDeleted()) {
+            throw new IllegalArgumentException("탈퇴한 유저입니다.");
+        }
+
         if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new AuthException("잘못된 비밀번호입니다.");
         }
@@ -91,21 +78,5 @@ public class AuthService {
         String bearerToken = jwtUtil.createToken(user.getUserId(), user.getEmail(), user.getUserRole());
 
         return new SigninResponseDto(bearerToken);
-    }
-
-    private boolean validateEmail(String email) {
-        // 이메일 정규표현식
-        // abc._.ab@abc.a.c or abc._.ab@abc.ac
-        String emailPattern = "^[\\w.]+@\\w+\\.\\w+(\\.\\w+)?";
-
-        return Pattern.matches(emailPattern, email);
-    }
-
-    private boolean validatePassword(String password) {
-        // 비밀번호 정규표현식
-        // 대소문자 1개이상, 숫자 1개이상, 특수문자 1개이상, 8자리 이상 20자리 이하
-        String passwordPattern = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,20}$";
-
-        return Pattern.matches(passwordPattern, password);
     }
 }
