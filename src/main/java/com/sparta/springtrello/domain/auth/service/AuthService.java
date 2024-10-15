@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -57,7 +58,7 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
 
-        String bearerToken = jwtUtil.createToken(savedUser.getUserId(), savedUser.getEmail(), savedUser.getUserRole());
+        String bearerToken = jwtUtil.createToken(savedUser.getUserId(), savedUser.getEmail(), savedUser.getUserRole(), null);
 
         return new SignupResponseDto(bearerToken);
     }
@@ -75,7 +76,7 @@ public class AuthService {
             throw new AuthException("잘못된 비밀번호입니다.");
         }
 
-        String bearerToken = jwtUtil.createToken(user.getUserId(), user.getEmail(), user.getUserRole());
+        String bearerToken = jwtUtil.createToken(user.getUserId(), user.getEmail(), user.getUserRole(), null);
 
         return new SigninResponseDto(bearerToken);
     }

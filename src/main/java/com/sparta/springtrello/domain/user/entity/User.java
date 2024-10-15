@@ -26,6 +26,15 @@ public class User extends Timestamped {
     private UserRole userRole;
     @ColumnDefault("false")
     private boolean isDeleted;
+    @Column(length = 20)
+    private Long kakaoId;
+
+    public User(String nickname, String email, UserRole userRole, Long kakaoId) {
+        this.nickname = nickname;
+        this.email = email;
+        this.userRole = userRole;
+        this.kakaoId = kakaoId;
+    }
 
     public User(String email, String password, String nickname, UserRole userRole) {
         this.email = email;
