@@ -40,4 +40,16 @@ public class Card  extends Timestamped {
         this.contents = requestDto.getContents();
         this.deadline = requestDto.getDeadline();
     }
+
+    public void setList(List list) {
+        if(this.list!=null && this.list.getCardList().contains(this)) {
+           this.getList().getCardList().remove(this);
+        }
+        this.list = list;
+        list.getCardList().add(this);
+    }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
 }
