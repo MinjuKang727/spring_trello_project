@@ -17,23 +17,22 @@ public class MemberController {
     private final MemberService memberService;
 
     // 멤버 초대
-    @PostMapping("/workspaces/{workspaceId}/invite/users/{userId}")
-    public ResponseEntity<Void> inviteUser(
+    @PostMapping("/workspaces/{workspaceId}/invitations/users/{userId}")
+    public ResponseEntity<MemberResponseDto> inviteUser(
 //            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long workspaceId,
             @PathVariable Long userId
     ) {
-        memberService.inviteUser(workspaceId);
-        return ResponseEntity.ok().build();
+        MemberResponseDto response = memberService.inviteUser(workspaceId);
+        return ResponseEntity.ok(response);
     }
 
     // 초대 수락
-    @PostMapping("/workspaces/{workspaceId}/accept")
+    @PutMapping("/workspaces/invitations/{memberId}")
     public ResponseEntity<MemberResponseDto> acceptWorkspace(
-//            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long workspaceId
+            @PathVariable Long memberId
     ) {
-        MemberResponseDto response = memberService.acceptWorkspace(workspaceId);
+        MemberResponseDto response = memberService.acceptWorkspace(memberId);
         return ResponseEntity.ok(response);
     }
 
@@ -47,7 +46,6 @@ public class MemberController {
         MemberResponseDto response = memberService.changeRole(memberId, requestDto);
         return ResponseEntity.ok(response);
     }
-
 
 
 }

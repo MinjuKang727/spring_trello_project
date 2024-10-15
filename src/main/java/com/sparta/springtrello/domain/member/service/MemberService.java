@@ -4,6 +4,7 @@ package com.sparta.springtrello.domain.member.service;
 import com.sparta.springtrello.domain.member.dto.MemberRequestDto;
 import com.sparta.springtrello.domain.member.dto.MemberResponseDto;
 import com.sparta.springtrello.domain.member.entity.Member;
+import com.sparta.springtrello.domain.member.enums.InvitationStatus;
 import com.sparta.springtrello.domain.member.enums.MemberRole;
 import com.sparta.springtrello.domain.member.repository.MemberRepository;
 import com.sparta.springtrello.domain.workspace.entity.Workspace;
@@ -21,20 +22,34 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final WorkspaceRepository workspaceRepository;
 
-    public void inviteUser(Long workspaceId) {
-
-    }
-
-    public MemberResponseDto acceptWorkspace(Long workspaceId) {
+    public MemberResponseDto inviteUser(Long workspaceId) {
         Workspace workspace = workspaceRepository.findById(workspaceId).orElseThrow(() ->
                 new NullPointerException("워크스페이스가 존재하지 않습니다."));
         Member member = new Member(
                 workspace,
+                InvitationStatus.PENDING,
                 MemberRole.READ_ONLY
         );
         memberRepository.save(member);
         return new MemberResponseDto(
                 member.getWorkspace().getWorkspace_id(),
+                member.getInvitationStatus(),
+                member.getMemberRole()
+        );
+
+    }
+
+    @Transactional
+    public MemberResponseDto acceptWorkspace(Long memberId) {
+
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new NullPointerException("멤버가 존재하지 않습니다."));
+
+        member.updateInvitationStatus(InvitationStatus.ACCEPT);
+
+        return new MemberResponseDto(
+                member.getWorkspace().getWorkspace_id(),
+                member.getInvitationStatus(),
                 member.getMemberRole()
         );
     }
@@ -49,6 +64,7 @@ public class MemberService {
 
         return new MemberResponseDto(
                 member.getWorkspace().getWorkspace_id(),
+                member.getInvitationStatus(),
                 member.getMemberRole()
         );
     }

@@ -1,7 +1,7 @@
 package com.sparta.springtrello.domain.member.enums;
 
-public enum MemberRole {
+public enum InvitationStatus {
 
-    WORKSPACE, BOARD, READ_ONLY
+    PENDING, ACCEPT
 
 }
