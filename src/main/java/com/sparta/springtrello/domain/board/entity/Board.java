@@ -15,7 +15,8 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")
     private Long id;
-
+    @Column(name = "board_name")
+    private String name;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderColumn(name = "deck_order")  // 순서 칼럼 지정

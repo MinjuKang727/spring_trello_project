@@ -1,6 +1,11 @@
 package com.sparta.springtrello.domain.deck.service;
 
+import com.sparta.springtrello.common.ErrorStatus;
+import com.sparta.springtrello.common.exception.ApiException;
+import com.sparta.springtrello.domain.board.entity.Board;
+import com.sparta.springtrello.domain.board.repository.BoardRepository;
 import com.sparta.springtrello.domain.deck.dto.response.DeckCreateResponse;
+import com.sparta.springtrello.domain.deck.entity.Deck;
 import com.sparta.springtrello.domain.deck.repository.DeckRepository;
 import com.sparta.springtrello.domain.deck.dto.request.DeckFindAllRequest;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DeckService {
 
     private final DeckRepository deckRepository;
+    private final BoardRepository boardRepository;
 
     /**
      * 덱 생성
@@ -23,7 +29,14 @@ public class DeckService {
      */
     @Transactional
     public DeckCreateResponse createDeck(Long boardId, String deckName) {
-        return null;
+        Board board = this.boardRepository.findById(boardId).orElseThrow(
+                () -> new ApiException(ErrorStatus._NOT_FOUND_BOARD)
+        );
+
+        Deck deck = new Deck(deckName, board);
+        Deck savedDeck = this.deckRepository.save(deck);
+
+        return new DeckCreateResponse(savedDeck);
     }
 
 
