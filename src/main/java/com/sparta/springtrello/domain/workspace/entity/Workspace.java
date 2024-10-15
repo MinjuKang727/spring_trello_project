@@ -1,6 +1,8 @@
 package com.sparta.springtrello.domain.workspace.entity;
 
 
+import com.sparta.springtrello.domain.member.entity.Member;
+import com.sparta.springtrello.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,29 +29,25 @@ public class Workspace {
     @Column
     private Boolean is_deleted = false;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", nullable = false)
-//    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-//    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
-//    private List<Board> boardList = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
-//    private List<Member> memberList = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
-//    private List<Notification> notificationList = new ArrayList<>();
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+    private List<Member> memberList = new ArrayList<>();
 
-//    public Workspace(String name, String description, User user) {
-//        this.name = name;
-//        this.description = description;
-//        this.user = user;
-//    }
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+    private List<Board> boardList = new ArrayList<>();
 
-    public Workspace(String name, String description) {
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+    private List<Notification> notificationList = new ArrayList<>();
+
+    public Workspace(String name, String description, User user) {
         this.name = name;
         this.description = description;
+        this.user = user;
     }
+
 
     public void update(String name, String description) {
         if (name != null) {

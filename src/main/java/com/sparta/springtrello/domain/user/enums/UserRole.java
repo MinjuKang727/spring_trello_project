@@ -1,10 +1,12 @@
 package com.sparta.springtrello.domain.user.enums;
 
 import com.sparta.springtrello.common.exception.InvalidRequestException;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 
+@Getter
 @RequiredArgsConstructor
 public enum UserRole {
 

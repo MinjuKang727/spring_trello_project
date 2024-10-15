@@ -3,6 +3,7 @@ package com.sparta.springtrello.domain.member.entity;
 
 import com.sparta.springtrello.domain.member.enums.InvitationStatus;
 import com.sparta.springtrello.domain.member.enums.MemberRole;
+import com.sparta.springtrello.domain.user.entity.User;
 import com.sparta.springtrello.domain.workspace.entity.Workspace;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,9 +20,9 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long member_id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", nullable = false)
-//    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workspace_id", nullable = false)
@@ -33,8 +34,8 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberRole memberRole;
 
-    // 유저 추가해야함
-    public Member(Workspace workspace, InvitationStatus invitationStatus, MemberRole memberRole) {
+    public Member(User user, Workspace workspace, InvitationStatus invitationStatus, MemberRole memberRole) {
+        this.user = user;
         this.workspace = workspace;
         this.invitationStatus = invitationStatus;
         this.memberRole = memberRole;

@@ -2,6 +2,7 @@ package com.sparta.springtrello.common.dto;
 
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -9,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Getter
+@Slf4j
 public class AuthUser {
 
     private final Long id;
@@ -20,7 +22,7 @@ public class AuthUser {
         this.id = id;
         this.email = email;
         this.userRole = role;
-        this.authorities = List.of(new SimpleGrantedAuthority(userRole.name()));
+        this.authorities = List.of(new SimpleGrantedAuthority(role.name()));
     }
 
 }
