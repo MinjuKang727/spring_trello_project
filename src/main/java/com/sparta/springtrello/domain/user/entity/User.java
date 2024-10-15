@@ -1,7 +1,7 @@
 package com.sparta.springtrello.domain.user.entity;
 
-import com.sparta.springtrello.common.dto.AuthUser;
 import com.sparta.springtrello.common.Timestamped;
+import com.sparta.springtrello.common.dto.AuthUser;
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -16,11 +16,12 @@ public class User extends Timestamped {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
-    @Column(length = 50, unique = true)
-    private String email;
+    @Column(length = 20)
     private String password;
     @Column(length = 20)
     private String nickname;
+    @Column(length = 50, unique = true)
+    private String email;
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
     @ColumnDefault("false")
@@ -41,5 +42,9 @@ public class User extends Timestamped {
 
     public static User fromAuthUser(AuthUser authUser) {
         return new User(authUser.getId(), authUser.getEmail(), authUser.getUserRole());
+    }
+
+    public void delete(User user) {
+        this.isDeleted = true;
     }
 }
