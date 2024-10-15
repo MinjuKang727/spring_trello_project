@@ -22,4 +22,6 @@ public class Board {
     @OrderColumn(name = "deck_order")  // 순서 칼럼 지정
     private List<Deck> deckList = new ArrayList<>();
 
+    private String backgroundcolor;
+    private String backgroundimage;
 }
