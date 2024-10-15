@@ -20,13 +20,13 @@ public class DeckController {
     private final DeckService deckService;
 
     /**
-     * 리스트 생성
-     * @param boardId : 리스트를 생성할 보드 ID
-     * @param deckName : 생성할 리스트 이름
-     * @return ResponseEntity : Status Code - 200 / body - 생성된 리스트 정보를 바인딩한 ListResponse 객체
+     * 덱 생성
+     * @param boardId : 덱를 생성할 보드 ID
+     * @param deckName : 생성할 덱 이름
+     * @return ApiResponse : message - "덱 생성 성공"/ Status Code - 200 / date - 생성된 덱 정보를 바인딩한 DeckResponse 객체
      */
     @PostMapping("/workspaces/{workspaceId}/boards/{boadId}/decks")
-    public ResponseEntity<ApiResponse<DeckCreateResponse>> createList(
+    public ResponseEntity<ApiResponse<DeckCreateResponse>> createDeck(
             @PathVariable(name = "boardId") Long boardId,
             @RequestBody @NotBlank String deckName
                                                         ) {
@@ -34,7 +34,7 @@ public class DeckController {
                 .status(200)
                 .body(
                         ApiResponse.createSuccess(
-                                "리스트 생성 성공",
+                                "덱 생성 성공",
                                 HttpStatus.OK.value(),
                                 this.deckService.createDeck(boardId, deckName)
                         )
@@ -42,17 +42,17 @@ public class DeckController {
     }
 
     /**
-     * 리스트 전체 조회
-     * @param request : 리스트 조회 조건(워크스페이스 ID, 보드ID, 페이징 page, 페이징 크기)을 바인딩 한 ListFinaAllRequest 객체
-     * @return ResponseEntity : Status Code - 200 / body - 리스트 조회 결과를 바인딩하여 페이징한 Page<ListResponse> 객체
+     * 덱 전체 조회
+     * @param request : 덱 조회 조건(워크스페이스 ID, 보드ID, 페이징 page, 페이징 크기)을 바인딩 한 DeckFinaAllRequest 객체
+     * @return ApiResponse : message - "덱 전체 조회 성공"/ Status Code - 200 / data - 덱 조회 결과를 바인딩하여 페이징한 Page<DeckResponse> 객체
      */
     @GetMapping("/workspaces/{workspaceId}/boards/{boadId}/decks")
-    public ResponseEntity<ApiResponse<Page<DeckCreateResponse>>> getLists(DeckFindAllRequest request) {
+    public ResponseEntity<ApiResponse<Page<DeckCreateResponse>>> getDecks(DeckFindAllRequest request) {
         return ResponseEntity
                 .status(200)
                 .body(
                         ApiResponse.createSuccess(
-                                "리스트 전체 조회 성공",
+                                "덱 전체 조회 성공",
                                 HttpStatus.OK.value(),
                                 this.deckService.getDecks(request)
                         )
@@ -61,14 +61,14 @@ public class DeckController {
 
 
     /**
-     * 리스트 순서 변경
-     * @param boardId : 이동할 리스트가 속한 보드 ID
-     * @param deckId : 이동할 리스트 ID
-     * @param newOrder : 리스트가 이동할 목표 위치(인덱스)
-     * @return ResponseEntity : Status Code - 200 / body - 이동한 리스트의 정보를 바인딩한 ListResponse 객체
+     * 덱 순서 변경
+     * @param boardId : 이동할 덱가 속한 보드 ID
+     * @param deckId : 이동할 덱 ID
+     * @param newOrder : 덱가 이동할 목표 위치(인덱스)
+     * @return ApiResponse : message - "덱 순서 변경 성공"/ Status Code - 200 / data - 이동한 덱의 정보를 바인딩한 DeckResponse 객체
      */
     @PutMapping("/workspaces/{workspaceId}/boards/{boadId}/decks/{deckId}/orders/{newOrder}")
-    public ResponseEntity<ApiResponse<DeckCreateResponse>> moveList(
+    public ResponseEntity<ApiResponse<DeckCreateResponse>> moveDeck(
             @PathVariable(name = "boardId") Long boardId,
             @PathVariable(name = "deckId") Long deckId,
             @PathVariable(name = "newOrder") int newOrder
@@ -77,7 +77,7 @@ public class DeckController {
                 .status(200)
                 .body(
                         ApiResponse.createSuccess(
-                                "리스트 순서 변경 성공",
+                                "덱 순서 변경 성공",
                                 HttpStatus.OK.value(),
                                 this.deckService.moveDeck(boardId, deckId, newOrder)
                         )
@@ -86,13 +86,13 @@ public class DeckController {
 
 
     /**
-     * 리스트 수정
-     * @param deckId : 수정할 리스트 ID
-     * @param deckName : 수정할 리스트 이름
-     * @return ResponseEntity : Status Code - 200 / body - 수정된 리스트 정보를 바인딩 한 ListResponse 객체
+     * 덱 수정
+     * @param deckId : 수정할 덱 ID
+     * @param deckName : 수정할 덱 이름
+     * @return ApiResponse : message - "덱 수정 성공"/ Status Code - 200 / data - 수정된 덱 정보를 바인딩 한 DeckResponse 객체
      */
     @PutMapping("/workspaces/{workspaceId}/boards/{boadId}/decks/{deckId}")
-    public ResponseEntity<ApiResponse<DeckCreateResponse>> updateList(
+    public ResponseEntity<ApiResponse<DeckCreateResponse>> updateDeck(
             @PathVariable(name = "deckId") Long deckId,
             @RequestBody @NotBlank String deckName
     ) {
@@ -100,7 +100,7 @@ public class DeckController {
                 .status(200)
                 .body(
                         ApiResponse.createSuccess(
-                                "리스트 수정 성공",
+                                "덱 수정 성공",
                                 HttpStatus.OK.value(),
                                 this.deckService.updateDeck(deckId, deckName)
                         )
@@ -108,18 +108,19 @@ public class DeckController {
     }
 
     /**
-     * 리스트 삭제
-     * @param deckId : 삭제할 리스트 ID
-     * @return ResponseEntity : Status Code - 200
+     * 덱 삭제
+     * @param deckId : 삭제할 덱 ID
+     * @return ApiResponse : message - "덱 삭제 성공"/ Status Code - 200/ data - null
      */
     @DeleteMapping("/workspaces/{workspaceId}/boards/{boadId}/decks/{deckId}")
-    public ResponseEntity<ApiResponse<Void>> deleteList(@PathVariable(name = "deckId") Long deckId) {
+    public ResponseEntity<ApiResponse<Void>> deleteDeck(@PathVariable(name = "deckId") Long deckId) {
         this.deckService.deleteDeck(deckId);
+
         return ResponseEntity
                 .status(204)
                 .body(
                        ApiResponse.createSuccess(
-                               "리스트 삭제 성공",
+                               "덱 삭제 성공",
                                HttpStatus.OK.value(),
                                null
                        )
