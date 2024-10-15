@@ -41,7 +41,7 @@ public class DeckService {
      * 덱 이동
      * @param boardId : 이동할 덱가 속한 보드 ID
      * @param deckId : 이동할 덱 ID
-     * @param newOrder : 덱가 이동할 목표 위치(인덱스)
+     * @param newOrder : 덱가 이동할 목표 위치
      * @return 이동한 덱의 정보를 바인딩한 DeckResponse 객체
      */
     public DeckCreateResponse moveDeck(Long boardId, Long deckId, int newOrder) {
