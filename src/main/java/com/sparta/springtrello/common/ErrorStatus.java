@@ -17,7 +17,7 @@ public enum ErrorStatus implements BaseCode {
     NOT_FOUND_TOKEN(HttpStatus.NOT_FOUND, 404, "JWT 토큰이 필요합니다."),
 
     //리스트 관련 예외
-    NOT_FOUND_LIST(HttpStatus.NOT_FOUND,404,"해당 리스트를 찾을 수 없습니다."),
+    NOT_FOUND_DECK(HttpStatus.NOT_FOUND,404,"해당 덱을 찾을 수 없습니다."),
 
     //워크스페이스 관련 예외
     FORBIDDEN_NOT_MEMBER(HttpStatus.FORBIDDEN,403,"해당 워크스페이스에 접근할 수 있는 권한이 없습니다."),

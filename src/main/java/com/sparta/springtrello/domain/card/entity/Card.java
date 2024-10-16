@@ -2,7 +2,7 @@ package com.sparta.springtrello.domain.card.entity;
 
 import com.sparta.springtrello.common.Timestamped;
 import com.sparta.springtrello.domain.card.dto.request.CardUpdateRequestDto;
-import com.sparta.springtrello.domain.list.entity.List;
+import com.sparta.springtrello.domain.deck.entity.Deck;
 import com.sparta.springtrello.domain.manager.entity.Manager;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -31,7 +31,7 @@ public class Card  extends Timestamped {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deck_id")
-    private List list;
+    private Deck deck;
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
     private java.util.List<Manager> managerList = new ArrayList<>();
@@ -52,12 +52,12 @@ public class Card  extends Timestamped {
         }
     }
 
-    public void setList(List list) {
-        if(this.list!=null && this.list.getCardList().contains(this)) {
-            this.getList().getCardList().remove(this);
+    public void setDeck(Deck deck) {
+        if(this.deck!=null && this.deck.getCardList().contains(this)) {
+            this.getDeck().getCardList().remove(this);
         }
-        this.list = list;
-        list.getCardList().add(this);
+        this.deck = deck;
+        deck.getCardList().add(this);
     }
 
     public void delete() {
