@@ -14,15 +14,22 @@ import org.hibernate.annotations.ColumnDefault;
 @Table(name = "users")
 public class User extends Timestamped {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    @Id
+    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(length = 50, unique = true)
     private String email;
+
     private String password;
+
     @Column(length = 20)
     private String nickname;
+
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+
     @ColumnDefault("false")
     private boolean isDeleted;
 
@@ -34,7 +41,7 @@ public class User extends Timestamped {
     }
 
     private User(Long userId, String email, UserRole userRole) {
-        this.userId = userId;
+        this.id = userId;
         this.email = email;
         this.userRole = userRole;
     }

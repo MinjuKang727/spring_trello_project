@@ -1,6 +1,9 @@
 package com.sparta.springtrello.domain.workspace.entity;
 
 
+import com.sparta.springtrello.domain.board.entity.Board;
+import com.sparta.springtrello.domain.member.entity.Member;
+import com.sparta.springtrello.domain.notification.entity.Notification;
 import com.sparta.springtrello.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,9 +18,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Workspace {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "workspace_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -30,28 +34,24 @@ public class Workspace {
     private Boolean is_deleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "admin_user_id", nullable = false)
     private User user;
 
-//    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
-//    private List<Board> boardList = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
-//    private List<Member> memberList = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
-//    private List<Notification> notificationList = new ArrayList<>();
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+    private List<Member> memberList = new ArrayList<>();
 
-//    public Workspace(String name, String description, User user) {
-//        this.name = name;
-//        this.description = description;
-//        this.user = user;
-//    }
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+    private List<Board> boardList = new ArrayList<>();
 
-    public Workspace(String name, String description) {
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+    private List<Notification> notificationList = new ArrayList<>();
+
+    public Workspace(String name, String description, User user) {
         this.name = name;
         this.description = description;
+        this.user = user;
     }
+
 
     public void update(String name, String description) {
         if (name != null) {
