@@ -40,4 +40,14 @@ public class ManagerUtil {
     public boolean existsManagerByMember(Member member) {
         return managerRepository.existsByMember(member);
     }
+
+    //요청한 유저가 요청한 카드의 매니저인지 검증
+    public void validateCardManager(Member member, Card card) {
+        boolean isManager = card.getManagerList().stream()
+                .anyMatch(manager -> manager.getMember().equals(member));
+
+        if (!isManager) {
+            throw new ApiException(ErrorStatus.FORBIDDEN_NOT_MANAGER);
+        }
+    }
 }

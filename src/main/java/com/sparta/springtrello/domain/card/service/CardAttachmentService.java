@@ -39,7 +39,7 @@ public class CardAttachmentService {
     public CardAttachmentResponseDto attachFileToCard(Member requestedMember, Long cardId, MultipartFile file) throws IOException {
         Card card = cardFinder.findById(cardId);
         //요청한 유저가 해당 카드의 매니저인지 확인
-        validateCardManager(requestedMember, card);
+        managerUtil.validateCardManager(requestedMember, card);
         //파일 업로드
         String url = upload(file);
         //Card 객체에 url 담아서 저장
@@ -51,12 +51,6 @@ public class CardAttachmentService {
         );
     }
 
-    //요청한 유저가 해당 카드의 매니저인지 검증
-    public void validateCardManager(Member member, Card card) {
-        if (!managerUtil.existsManagerByMember(member)) {
-            throw new ApiException(ErrorStatus.FORBIDDEN_NOT_MANAGER);
-        }
-    }
 
     //파일 첨부 기능
     public String upload(MultipartFile multipartFile) throws IOException {
