@@ -24,7 +24,7 @@ public enum ErrorStatus implements BaseCode {
     _FORBIDDEN_NOT_MEMBER(HttpStatus.FORBIDDEN,403,"해당 워크스페이스에 접근할 수 있는 권한이 없습니다."),
     _FORBIDDEN_ACCESS_INVITE(HttpStatus.FORBIDDEN, 403, "초대 권한이 없습니다."),
     _FORBIDDEN_ACCESS_CHANGE_ROLE(HttpStatus.FORBIDDEN, 403, "해당 워크스페이스의 관리자가 아닙니다."),
-    _CONFLICT_MEMBER(HttpStatus.BAD_REQUEST, 400, "이미 초대된 멤버입니다."),
+    _CONFLICT_MEMBER(HttpStatus.BAD_REQUEST, 400, "해당 유저는 이미 초대된 멤버입니다."),
 
     //카드 관련 예외
     _FORBIDDEN_READ_ONLY(HttpStatus.FORBIDDEN,403,"현재 권한이 읽기 전용입니다."),
