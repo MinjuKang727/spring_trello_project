@@ -11,7 +11,6 @@ import java.util.stream.IntStream;
 
 @Getter
 @Entity
-@Getter
 @NoArgsConstructor
 public class Board {
 

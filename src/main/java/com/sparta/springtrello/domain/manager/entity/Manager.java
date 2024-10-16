@@ -50,7 +50,7 @@ public class Manager {
      */
     public void delete(Card card) {
         if (!card.getManagerList().contains(this)) {
-            throw new ApiException(ErrorStatus.BAD_REQUEST_NOT_MANAGER);
+            throw new ApiException(ErrorStatus._BAD_REQUEST_ILLEGAL_TOKEN);
         }
         card.getManagerList().remove(this);
         this.isDeleted = true;

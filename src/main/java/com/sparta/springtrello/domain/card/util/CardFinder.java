@@ -16,7 +16,7 @@ public class CardFinder {
 
     public Card findById(Long cardId) {
         return cardRespository.findById(cardId).orElseThrow(
-                ()-> new ApiException(ErrorStatus.NOT_FOUND_CARD)
+                ()-> new ApiException(ErrorStatus._BAD_REQUEST_ILLEGAL_TOKEN)
         );
     }
 }

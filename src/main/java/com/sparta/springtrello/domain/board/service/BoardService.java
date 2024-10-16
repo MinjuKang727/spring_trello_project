@@ -7,9 +7,9 @@ import com.sparta.springtrello.domain.board.dto.BoardResponseDto;
 import com.sparta.springtrello.domain.board.entity.Board;
 import com.sparta.springtrello.domain.board.repository.BoardRepository;
 
-import com.sparta.springtrello.domain.workspace.WorkspaceRepository;
 import com.sparta.springtrello.domain.workspace.entity.Workspace;
 
+import com.sparta.springtrello.domain.workspace.repository.WorkspaceRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -55,7 +55,7 @@ public class BoardService {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new ApiException(ErrorStatus._NOT_FOUND_BOARD));
         return new BoardResponseDto(board.getId(),
                 board.getTitle(),
-                board.getWorkspace().getWorkspace_id(),
+                board.getWorkspace().getId(),
                 board.getBackgroundColor(),
                 board.getBackgroundImage(),
                 board.isDeleted()
@@ -71,7 +71,7 @@ public class BoardService {
         boardRepository.save(board);
         return new BoardResponseDto(board.getId(),
                 board.getTitle(),
-                board.getWorkspace().getWorkspace_id(),
+                board.getWorkspace().getId(),
                 board.getBackgroundColor(),
                 board.getBackgroundImage(),
                 board.isDeleted()
