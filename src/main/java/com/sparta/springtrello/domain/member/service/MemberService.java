@@ -53,9 +53,7 @@ public class MemberService {
 
         Member member = new Member(
                 user,
-                workspace,
-                InvitationStatus.PENDING,
-                MemberRole.READ_ONLY
+                workspace
         );
         memberRepository.save(member);
         return new MemberResponseDto(
@@ -85,11 +83,6 @@ public class MemberService {
     public MemberResponseDto changeRole(AuthUser authUser, Long memberId, MemberRequestDto requestDto) {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new ApiException(ErrorStatus._NOT_FOUND_MEMBER));
-
-        // admin 확인
-        if (authUser.getUserRole() != UserRole.ROLE_ADMIN) {
-            throw new ApiException(ErrorStatus._FORBIDDEN_TOKEN);
-        }
 
         // 해당 워크스페이스의 admin인지 확인
         if (!Objects.equals(member.getWorkspace().getUser().getId(), authUser.getId())) {

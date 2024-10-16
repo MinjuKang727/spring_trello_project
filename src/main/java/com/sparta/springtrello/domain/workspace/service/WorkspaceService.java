@@ -29,10 +29,7 @@ public class WorkspaceService {
 
     @Transactional
     public WorkspaceResponseDto createWorkspace(AuthUser authUser, WorkspaceRequestDto requestDto) {
-        // 권한 확인
-        if (authUser.getUserRole() != UserRole.ROLE_ADMIN) {
-            throw new ApiException(ErrorStatus._FORBIDDEN_TOKEN);
-        }
+
         User user = User.fromAuthUser(authUser);
         Workspace newWorkspace = new Workspace(
                 requestDto.getName(),
@@ -88,10 +85,7 @@ public class WorkspaceService {
 
     @Transactional
     public WorkspaceResponseDto update(AuthUser authUser, Long workspaceId, WorkspaceRequestDto requestDto) {
-        // 권한 확인
-        if (authUser.getUserRole() != UserRole.ROLE_ADMIN) {
-            throw new ApiException(ErrorStatus._FORBIDDEN_TOKEN);
-        }
+
         Workspace workspace = workspaceRepository.findById(workspaceId).orElseThrow(() ->
                 new ApiException(ErrorStatus._NOT_FOUND_WORKSPACE));
         workspace.update(
@@ -109,10 +103,7 @@ public class WorkspaceService {
 
     @Transactional
     public void delete(AuthUser authUser, Long workspaceId) {
-        // 권한 확인
-        if (authUser.getUserRole() != UserRole.ROLE_ADMIN) {
-            throw new ApiException(ErrorStatus._FORBIDDEN_TOKEN);
-        }
+
         Workspace workspace = workspaceRepository.findById(workspaceId).orElseThrow(() ->
                 new ApiException(ErrorStatus._NOT_FOUND_WORKSPACE));
         workspace.deleteWorkspace();

@@ -30,16 +30,14 @@ public class Member {
     private Workspace workspace;
 
     @Enumerated(EnumType.STRING)
-    private InvitationStatus invitationStatus;
+    private InvitationStatus invitationStatus = InvitationStatus.PENDING;
 
     @Enumerated(EnumType.STRING)
-    private MemberRole memberRole;
+    private MemberRole memberRole = MemberRole.READ_ONLY;
 
-    public Member(User user, Workspace workspace, InvitationStatus invitationStatus, MemberRole memberRole) {
+    public Member(User user, Workspace workspace) {
         this.user = user;
         this.workspace = workspace;
-        this.invitationStatus = invitationStatus;
-        this.memberRole = memberRole;
     }
 
     public void updateInvitationStatus(InvitationStatus invitationStatus) {
