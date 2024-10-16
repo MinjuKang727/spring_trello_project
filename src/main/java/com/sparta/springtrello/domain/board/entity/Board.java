@@ -4,17 +4,21 @@ import com.sparta.springtrello.domain.deck.entity.Deck;
 import com.sparta.springtrello.domain.workspace.entity.Workspace;
 import jakarta.persistence.*;
 import lombok.Getter;
-
+import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
 @Getter
 @Entity
+@Getter
+@NoArgsConstructor
 public class Board {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
     @Column(name = "board_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -28,10 +32,26 @@ public class Board {
     @OrderColumn(name = "deckk_order")  // 순서 칼럼 지정
     private List<Deck> deckList = new ArrayList<>();
 
-    private String backgroundcolor;
-    private String backgroundimage;
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
 
-    public void addDeck(Deck deck) {
-        this.deckList.add(deck);
+    private String backgroundColor;
+    private String backgroundImage;
+    
+    public Board(String title, Workspace workspace, String backgroundColor, String backgroundImage) {
+        this.title = title;
+        this.workspace = workspace;
+        this.backgroundColor = backgroundColor;
+        this.backgroundImage = backgroundImage;
+    }
+
+    public void updateBoard(String title, String backgroundColor, String backgroundImage) {
+        this.title = title;
+        this.backgroundColor = backgroundColor;
+        this.backgroundImage = backgroundImage;
+    }
+
+    public void Deleted() {
+        this.isDeleted = true;
     }
 }
