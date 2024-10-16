@@ -48,4 +48,15 @@ public class Member {
         this.memberRole = memberRole;
     }
 
+    public void setUser(User user) {
+        if (this.user != null) {
+            this.user.getMemberList().remove(this);
+        }
+        this.user = user;
+        if (user != null && !user.getMemberList().contains(this)) {
+            user.getMemberList().add(this);
+        }
+    }
+
+
 }

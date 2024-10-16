@@ -2,11 +2,15 @@ package com.sparta.springtrello.domain.user.entity;
 
 import com.sparta.springtrello.domain.auth.dto.AuthUser;
 import com.sparta.springtrello.common.Timestamped;
+import com.sparta.springtrello.domain.member.entity.Member;
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,6 +37,9 @@ public class User extends Timestamped {
     @ColumnDefault("false")
     private boolean isDeleted;
 
+    @OneToMany(mappedBy = "user")
+    List<Member> memberList = new ArrayList<>();
+
     public User(String email, String password, String nickname, UserRole userRole) {
         this.email = email;
         this.password = password;
@@ -40,8 +47,9 @@ public class User extends Timestamped {
         this.userRole = userRole;
     }
 
-    private User(Long userId, String email, UserRole userRole) {
-        this.id = userId;
+    public User(Long userId, String email, UserRole userRole) {
+        this.userId = userId;
+
         this.email = email;
         this.userRole = userRole;
     }
