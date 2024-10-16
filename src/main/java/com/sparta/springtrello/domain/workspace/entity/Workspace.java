@@ -1,7 +1,9 @@
 package com.sparta.springtrello.domain.workspace.entity;
 
 
+import com.sparta.springtrello.domain.board.entity.Board;
 import com.sparta.springtrello.domain.member.entity.Member;
+import com.sparta.springtrello.domain.notification.entity.Notification;
 import com.sparta.springtrello.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -38,11 +40,11 @@ public class Workspace {
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
     private List<Member> memberList = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
-//    private List<Board> boardList = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
-//    private List<Notification> notificationList = new ArrayList<>();
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+    private List<Board> boardList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+    private List<Notification> notificationList = new ArrayList<>();
 
     public Workspace(String name, String description, User user) {
         this.name = name;

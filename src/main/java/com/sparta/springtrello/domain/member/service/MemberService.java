@@ -2,8 +2,8 @@ package com.sparta.springtrello.domain.member.service;
 
 
 import com.sparta.springtrello.common.ErrorStatus;
-import com.sparta.springtrello.common.dto.AuthUser;
 import com.sparta.springtrello.common.exception.ApiException;
+import com.sparta.springtrello.domain.auth.dto.AuthUser;
 import com.sparta.springtrello.domain.member.dto.MemberRequestDto;
 import com.sparta.springtrello.domain.member.dto.MemberResponseDto;
 import com.sparta.springtrello.domain.member.entity.Member;

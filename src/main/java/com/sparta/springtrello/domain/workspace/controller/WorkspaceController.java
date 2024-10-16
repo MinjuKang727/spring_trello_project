@@ -2,7 +2,7 @@ package com.sparta.springtrello.domain.workspace.controller;
 
 
 import com.sparta.springtrello.common.ApiResponse;
-import com.sparta.springtrello.common.dto.AuthUser;
+import com.sparta.springtrello.domain.auth.dto.AuthUser;
 import com.sparta.springtrello.domain.workspace.dto.WorkspaceRequestDto;
 import com.sparta.springtrello.domain.workspace.dto.WorkspaceResponseDto;
 import com.sparta.springtrello.domain.workspace.service.WorkspaceService;

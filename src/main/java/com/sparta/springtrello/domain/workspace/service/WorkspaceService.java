@@ -2,8 +2,8 @@ package com.sparta.springtrello.domain.workspace.service;
 
 
 import com.sparta.springtrello.common.ErrorStatus;
-import com.sparta.springtrello.common.dto.AuthUser;
 import com.sparta.springtrello.common.exception.ApiException;
+import com.sparta.springtrello.domain.auth.dto.AuthUser;
 import com.sparta.springtrello.domain.member.entity.Member;
 import com.sparta.springtrello.domain.member.repository.MemberRepository;
 import com.sparta.springtrello.domain.user.entity.User;
@@ -60,7 +60,7 @@ public class WorkspaceService {
 
         // authUser가 멤버가 아니면 예외 발생
         if (!isMember) {
-            throw new ApiException(ErrorStatus._FORBIDDEN_ACCESS);
+            throw new ApiException(ErrorStatus._FORBIDDEN_NOT_MEMBER);
         }
 
         return new WorkspaceResponseDto(
