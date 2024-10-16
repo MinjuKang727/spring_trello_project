@@ -4,6 +4,7 @@ import com.sparta.springtrello.common.Timestamped;
 import com.sparta.springtrello.common.dto.AuthUser;
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -24,7 +25,6 @@ public class User extends Timestamped {
     private String email;
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
-    @ColumnDefault("false")
     private boolean isDeleted;
     @Column(length = 20)
     private Long kakaoId;
@@ -43,14 +43,17 @@ public class User extends Timestamped {
         this.userRole = userRole;
     }
 
-    private User(Long userId, String email, UserRole userRole) {
-        this.userId = userId;
-        this.email = email;
-        this.userRole = userRole;
+    public void InsertKakaoId(Long kakaoId) {
+        this.kakaoId = kakaoId;
     }
 
     public static User fromAuthUser(AuthUser authUser) {
-        return new User(authUser.getId(), authUser.getEmail(), authUser.getUserRole());
+        return new User(authUser.getEmail(), authUser.getUserRole());
+    }
+
+    private User(String email, UserRole userRole) {
+        this.email = email;
+        this.userRole = userRole;
     }
 
     public void delete(User user) {

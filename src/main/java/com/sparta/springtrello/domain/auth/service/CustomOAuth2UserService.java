@@ -16,7 +16,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) {
-        OAuth2UserService delegate = new DefaultOAuth2UserService();
+        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
         // 현재 로그인 진행 중인 서비스 구분 코드 - 현재 구글만 사용한다고 함

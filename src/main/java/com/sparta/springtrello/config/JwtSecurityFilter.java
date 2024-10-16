@@ -39,13 +39,11 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
             String jwt = jwtUtil.substringToken(authorizationHeader);
             try {
                 Claims claims = jwtUtil.extractClaims(jwt);
-                Long userId = Long.valueOf(claims.getSubject());
                 String email = claims.get("email", String.class);
                 UserRole userRole = UserRole.of(claims.get("userRole", String.class));
-                Long kakaoId = claims.get("userRole", Long.class);
 
                 if (SecurityContextHolder.getContext().getAuthentication() == null) {
-                    AuthUser authUser = new AuthUser(userId, email, userRole, kakaoId);
+                    AuthUser authUser = new AuthUser(email, userRole);
 
                     JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(authUser);
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));

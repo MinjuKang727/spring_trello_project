@@ -18,7 +18,7 @@ public class UserService {
 
     @Transactional
     public String deleteUser(AuthUser authUser, UserDeleteRequestDto requestDto) {
-        User user = userRepository.findById(authUser.getId()).orElseThrow(() ->
+        User user = userRepository.findByEmail(authUser.getEmail()).orElseThrow(() ->
             new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
         if(!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {

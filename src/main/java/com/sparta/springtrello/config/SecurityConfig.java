@@ -31,12 +31,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
-        return web -> web.ignoring()
-                .requestMatchers("/error");
-    }
-
-    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -46,6 +40,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtSecurityFilter, SecurityContextHolderAwareRequestFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .requestMatchers("/test", "/admin/**").hasAuthority(UserRole.Authority.ADMIN)
                         .anyRequest().authenticated()
                 )

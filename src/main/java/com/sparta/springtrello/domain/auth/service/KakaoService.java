@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j(topic = "kakao 서비스 로직")
 @Service
@@ -30,13 +31,16 @@ public class KakaoService {
     private String client_id;
 
     @Value("${kakao.redirect.uri}")
-    private String redirect_url;
+    private String redirect_uri;
 
     public String kakaoLogin() {
-        return "https://kauth.kakao.com/oauth/authorize?" +
-                "client_id=" + client_id +
-                "&redirect_uri=" + redirect_url +
-                "&response_type=code";
+        return UriComponentsBuilder
+                .fromUriString("https://kauth.kakao.com")
+                .path("/oauth/authorize")
+                .queryParam("client_id", client_id)
+                .queryParam("redirect_uri", redirect_uri)
+                .queryParam("response_type", "code")
+                .build().toString();
     }
 
     public String callback(String code) throws Exception {
@@ -56,7 +60,7 @@ public class KakaoService {
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
             params.add("grant_type", "authorization_code");
             params.add("client_id", client_id);
-            params.add("redirect_uri", redirect_url);
+            params.add("redirect_uri", redirect_uri);
             params.add("code", code);
 
             RestTemplate restTemplate = new RestTemplate();
@@ -109,13 +113,16 @@ public class KakaoService {
         String email = String.valueOf(account.get("email"));
         String nickname = String.valueOf(profile.get("nickname"));
 
-        User user = userRepository.findByKakaoId(kakaoId).orElseGet( () ->
-            userRepository.save(new User(nickname, email, UserRole.ROLE_USER, kakaoId)));
+        User kakaoUser = userRepository.findByEmail(email).orElseGet(() ->
+            new User(nickname, email, UserRole.ROLE_USER, kakaoId)
+        );
 
-        return jwtUtil.createToken(
-                user.getUserId(),
-                user.getEmail(),
-                user.getUserRole(),
-                user.getKakaoId());
+        if(kakaoUser.getKakaoId() == null) {
+            kakaoUser.InsertKakaoId(kakaoId);
+        }
+
+        User savedUser = userRepository.save(kakaoUser);
+
+        return jwtUtil.createToken(savedUser.getEmail(), savedUser.getUserRole());
     }
 }
