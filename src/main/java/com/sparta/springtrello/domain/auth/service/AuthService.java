@@ -2,10 +2,7 @@ package com.sparta.springtrello.domain.auth.service;
 
 import com.sparta.springtrello.common.exception.AuthException;
 import com.sparta.springtrello.config.JwtUtil;
-import com.sparta.springtrello.domain.auth.dto.SigninRequestDto;
-import com.sparta.springtrello.domain.auth.dto.SigninResponseDto;
-import com.sparta.springtrello.domain.auth.dto.SignupRequestDto;
-import com.sparta.springtrello.domain.auth.dto.SignupResponseDto;
+import com.sparta.springtrello.domain.auth.dto.*;
 import com.sparta.springtrello.domain.user.entity.User;
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import com.sparta.springtrello.domain.user.repository.UserRepository;
@@ -106,5 +103,9 @@ public class AuthService {
         String passwordPattern = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,20}$";
 
         return Pattern.matches(passwordPattern, password);
+    }
+
+    public static User fromAuthUser(AuthUser authUser) {
+        return new User(authUser.getId(), authUser.getEmail(), authUser.getUserRole());
     }
 }

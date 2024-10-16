@@ -1,6 +1,7 @@
 package com.sparta.springtrello.domain.board.entity;
 
 import com.sparta.springtrello.domain.deck.entity.Deck;
+import com.sparta.springtrello.domain.workspace.entity.Workspace;
 import jakarta.persistence.*;
 import lombok.Getter;
 
