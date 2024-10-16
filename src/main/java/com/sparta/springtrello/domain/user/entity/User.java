@@ -1,13 +1,15 @@
 package com.sparta.springtrello.domain.user.entity;
 
 import com.sparta.springtrello.common.Timestamped;
-import com.sparta.springtrello.common.dto.AuthUser;
+import com.sparta.springtrello.domain.auth.dto.AuthUser;
+import com.sparta.springtrello.domain.member.entity.Member;
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -15,14 +17,17 @@ import org.hibernate.annotations.ColumnDefault;
 @Table(name = "users")
 public class User extends Timestamped {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
-    @Column(length = 20)
+    @Id
+    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 50, unique = true)
+    private String email;
+
     private String password;
     @Column(length = 20)
     private String nickname;
-    @Column(length = 50, unique = true)
-    private String email;
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
     private boolean isDeleted;
@@ -36,6 +41,9 @@ public class User extends Timestamped {
         this.kakaoId = kakaoId;
     }
 
+    @OneToMany(mappedBy = "user")
+    List<Member> memberList = new ArrayList<>();
+
     public User(String email, String password, String nickname, UserRole userRole) {
         this.email = email;
         this.password = password;
@@ -47,16 +55,17 @@ public class User extends Timestamped {
         this.kakaoId = kakaoId;
     }
 
-    public static User fromAuthUser(AuthUser authUser) {
-        return new User(authUser.getEmail(), authUser.getUserRole());
-    }
-
-    private User(String email, UserRole userRole) {
+    private User(Long id, String email, UserRole userRole) {
+        this.id = id;
         this.email = email;
         this.userRole = userRole;
     }
 
-    public void delete(User user) {
+    public static User fromAuthUser(AuthUser authUser) {
+        return new User(authUser.getId(), authUser.getEmail(), authUser.getUserRole());
+    }
+
+    public void delete() {
         this.isDeleted = true;
     }
 }

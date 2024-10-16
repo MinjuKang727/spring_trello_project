@@ -123,6 +123,6 @@ public class KakaoService {
 
         User savedUser = userRepository.save(kakaoUser);
 
-        return jwtUtil.createToken(savedUser.getEmail(), savedUser.getUserRole());
+        return jwtUtil.createToken(savedUser.getId(), savedUser.getEmail(), savedUser.getUserRole());
     }
 }

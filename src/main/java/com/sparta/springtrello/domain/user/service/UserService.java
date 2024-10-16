@@ -1,6 +1,6 @@
 package com.sparta.springtrello.domain.user.service;
 
-import com.sparta.springtrello.common.dto.AuthUser;
+import com.sparta.springtrello.domain.auth.dto.AuthUser;
 import com.sparta.springtrello.domain.user.dto.UserDeleteRequestDto;
 import com.sparta.springtrello.domain.user.entity.User;
 import com.sparta.springtrello.domain.user.repository.UserRepository;
@@ -25,7 +25,7 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        user.delete(user);
+        user.delete();
 
         // 로그아웃 기능 구현하기
 

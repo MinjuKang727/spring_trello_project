@@ -1,7 +1,7 @@
 package com.sparta.springtrello.domain.user.controller;
 
 import com.sparta.springtrello.common.ApiResponse;
-import com.sparta.springtrello.common.dto.AuthUser;
+import com.sparta.springtrello.domain.auth.dto.AuthUser;
 import com.sparta.springtrello.domain.user.dto.UserDeleteRequestDto;
 import com.sparta.springtrello.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;

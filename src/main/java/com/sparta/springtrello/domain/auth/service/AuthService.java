@@ -2,10 +2,7 @@ package com.sparta.springtrello.domain.auth.service;
 
 import com.sparta.springtrello.common.exception.AuthException;
 import com.sparta.springtrello.config.JwtUtil;
-import com.sparta.springtrello.domain.auth.dto.SigninRequestDto;
-import com.sparta.springtrello.domain.auth.dto.SigninResponseDto;
-import com.sparta.springtrello.domain.auth.dto.SignupRequestDto;
-import com.sparta.springtrello.domain.auth.dto.SignupResponseDto;
+import com.sparta.springtrello.domain.auth.dto.*;
 import com.sparta.springtrello.domain.user.entity.User;
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import com.sparta.springtrello.domain.user.repository.UserRepository;
@@ -14,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -58,7 +56,7 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
 
-        String bearerToken = jwtUtil.createToken(savedUser.getEmail(), savedUser.getUserRole());
+        String bearerToken = jwtUtil.createToken(savedUser.getId(), savedUser.getEmail(), savedUser.getUserRole());
 
         return new SignupResponseDto(bearerToken);
     }
@@ -76,7 +74,7 @@ public class AuthService {
             throw new AuthException("잘못된 비밀번호입니다.");
         }
 
-        String bearerToken = jwtUtil.createToken(user.getEmail(), user.getUserRole());
+        String bearerToken = jwtUtil.createToken(user.getId(), user.getEmail(), user.getUserRole());
 
         return new SigninResponseDto(bearerToken);
     }
