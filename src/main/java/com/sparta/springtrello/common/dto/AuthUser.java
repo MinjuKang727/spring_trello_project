@@ -22,7 +22,7 @@ public class AuthUser {
         this.id = id;
         this.email = email;
         this.userRole = role;
-        this.authorities = List.of(new SimpleGrantedAuthority(role.name()));
+        this.authorities = List.of(new SimpleGrantedAuthority(userRole.name()));
     }
 
 }
