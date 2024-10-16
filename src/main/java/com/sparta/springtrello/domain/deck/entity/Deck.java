@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +20,11 @@ public class Deck {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "deck_id")
     private Long id;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String name;
     @Column(name = "deck_order", nullable = false)
     private int order;
-    private Boolean isDeleted = false;
+    private boolean isDeleted;
 
     @ManyToOne
     @JoinColumn(name = "board_id")

@@ -23,5 +23,4 @@ public class AuthUser {
         this.userRole = role;
         this.authorities = List.of(new SimpleGrantedAuthority(userRole.name()));
     }
-
 }

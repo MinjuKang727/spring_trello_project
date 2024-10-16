@@ -6,9 +6,7 @@ import com.sparta.springtrello.domain.board.dto.BoardRequestDto;
 import com.sparta.springtrello.domain.board.dto.BoardResponseDto;
 import com.sparta.springtrello.domain.board.entity.Board;
 import com.sparta.springtrello.domain.board.repository.BoardRepository;
-
 import com.sparta.springtrello.domain.workspace.entity.Workspace;
-
 import com.sparta.springtrello.domain.workspace.repository.WorkspaceRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +22,7 @@ public class BoardService {
     public BoardResponseDto createBoard(BoardRequestDto boardRequestDto) {
 
         //workspaceID가져오기
-       Workspace workspace = workspaceRepository.findById(boardRequestDto.getWorkspacesid()).orElseThrow(() -> new ApiException(ErrorStatus._NOT_FOUND_WORKSPACE));
+       Workspace workspace = workspaceRepository.findById(boardRequestDto.getWorkspacesid()).orElseThrow(() -> new ApiException(ErrorStatus.NOT_FOUND_WORKSPACE));
         // 보드 생성하기
        Board board = new Board(boardRequestDto.getTitle(), workspace, boardRequestDto.getBackgroundcolor(), boardRequestDto.getBackgroundimage());
         // 생성한 보드 저장
@@ -32,8 +30,8 @@ public class BoardService {
        return new BoardResponseDto(createBoard.getId(),
                createBoard.getTitle(),
                boardRequestDto.getWorkspacesid(),
-               createBoard.getBackgroundColor(),
-               createBoard.getBackgroundImage(),
+               createBoard.getBackgroundcolor(),
+               createBoard.getBackgroundimage(),
                createBoard.isDeleted()
        );
     }
@@ -44,27 +42,27 @@ public class BoardService {
                 .map(board -> new BoardResponseDto(board.getId(),
                         board.getTitle(),
                         workspacesId,
-                        board.getBackgroundColor(),
-                        board.getBackgroundImage(),
+                        board.getBackgroundcolor(),
+                        board.getBackgroundimage(),
                         board.isDeleted()))
                 .collect(Collectors.toList()
                 );
     }
     // 특정보드 조회
     public BoardResponseDto getBoardById(Long boardId) {
-        Board board = boardRepository.findById(boardId).orElseThrow(() -> new ApiException(ErrorStatus._NOT_FOUND_BOARD));
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new ApiException(ErrorStatus.NOT_FOUND_BOARD));
         return new BoardResponseDto(board.getId(),
                 board.getTitle(),
                 board.getWorkspace().getId(),
-                board.getBackgroundColor(),
-                board.getBackgroundImage(),
+                board.getBackgroundcolor(),
+                board.getBackgroundimage(),
                 board.isDeleted()
         );
     }
     //보드 수정
     public BoardResponseDto updateBoard(Long boardId, BoardRequestDto boardRequestDto) {
 
-        Board board = boardRepository.findById(boardId).orElseThrow(() -> new ApiException(ErrorStatus._NOT_FOUND_BOARD));
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new ApiException(ErrorStatus.NOT_FOUND_BOARD));
 
         board.updateBoard(boardRequestDto.getTitle(), boardRequestDto.getBackgroundcolor(), boardRequestDto.getBackgroundimage());
 
@@ -72,8 +70,8 @@ public class BoardService {
         return new BoardResponseDto(board.getId(),
                 board.getTitle(),
                 board.getWorkspace().getId(),
-                board.getBackgroundColor(),
-                board.getBackgroundImage(),
+                board.getBackgroundcolor(),
+                board.getBackgroundimage(),
                 board.isDeleted()
         );
     }
@@ -81,7 +79,7 @@ public class BoardService {
 
     public void deleteBoard(Long boardId) {
 
-        Board board = boardRepository.findById(boardId).orElseThrow(() -> new ApiException(ErrorStatus._NOT_FOUND_BOARD));
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new ApiException(ErrorStatus.NOT_FOUND_BOARD));
         board.Deleted();
         boardRepository.save(board);
     }

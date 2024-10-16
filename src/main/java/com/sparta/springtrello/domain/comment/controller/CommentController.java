@@ -8,18 +8,17 @@ import com.sparta.springtrello.domain.comment.dto.CommentResponseDto;
 import com.sparta.springtrello.domain.comment.entity.Comment;
 import com.sparta.springtrello.domain.comment.repository.CommentRepository;
 import com.sparta.springtrello.domain.comment.service.CommentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/cards")
+@RequiredArgsConstructor
 public class CommentController {
 
-    @Autowired
-    private CommentService commentService;
-    @Autowired
-    private CommentRepository commentRepository;
+    private final CommentService commentService;
 
     @PostMapping("/{cardId}/comments")
     public ResponseEntity<ApiResponse<CommentResponseDto>> createComment(@PathVariable Long cardId, @RequestBody CommentRequestDto commentRequestDto){
@@ -33,7 +32,7 @@ public class CommentController {
             @PathVariable Long commentId,
             @RequestBody CommentRequestDto commentRequestDto) {
         //댓글확인
-        Comment comment = commentRepository.findById(commentId).orElseThrow(()-> new ApiException(ErrorStatus._NOT_FOUND_COMMENT));
+        Comment comment = commentService.getComment(commentId);
 
         CommentResponseDto responseDto = commentService.updateComment(commentId, commentRequestDto);
         return ResponseEntity.ok(ApiResponse.onSuccess(responseDto));
