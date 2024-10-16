@@ -49,7 +49,7 @@ public class ManagerService {
 
         return new CardManagerChangedResponseDto(cardId,
                 card.getTitle(),
-                foundMember.getUser().getUserId(),
+                foundMember.getUser().getId(),
                 foundMember.getUser().getNickname());
     }
 
@@ -79,7 +79,7 @@ public class ManagerService {
         cardRespository.save(card);
         return new CardManagerChangedResponseDto(cardId,
                 card.getTitle(),
-                foundManager.getMember().getUser().getUserId(),
+                foundManager.getMember().getUser().getId(),
                 foundManager.getMember().getUser().getNickname());
     }
 

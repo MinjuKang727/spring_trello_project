@@ -8,10 +8,8 @@ import com.sparta.springtrello.domain.member.dto.MemberRequestDto;
 import com.sparta.springtrello.domain.member.dto.MemberResponseDto;
 import com.sparta.springtrello.domain.member.entity.Member;
 import com.sparta.springtrello.domain.member.enums.InvitationStatus;
-import com.sparta.springtrello.domain.member.enums.MemberRole;
 import com.sparta.springtrello.domain.member.repository.MemberRepository;
 import com.sparta.springtrello.domain.user.entity.User;
-import com.sparta.springtrello.domain.user.enums.UserRole;
 import com.sparta.springtrello.domain.user.repository.UserRepository;
 import com.sparta.springtrello.domain.workspace.entity.Workspace;
 import com.sparta.springtrello.domain.workspace.repository.WorkspaceRepository;
@@ -20,8 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -36,19 +32,19 @@ public class MemberService {
 
     public MemberResponseDto inviteUser(AuthUser authUser, Long workspaceId, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new ApiException(ErrorStatus._NOT_FOUND_USER));
+                new ApiException(ErrorStatus.NOT_FOUND_USER));
 
         Workspace workspace = workspaceRepository.findById(workspaceId).orElseThrow(() ->
-                new ApiException(ErrorStatus._NOT_FOUND_WORKSPACE));
+                new ApiException(ErrorStatus.NOT_FOUND_WORKSPACE));
 
         if (!Objects.equals(workspace.getUser().getId(), authUser.getId())) {
-            throw new ApiException(ErrorStatus._FORBIDDEN_ACCESS_INVITE);
+            throw new ApiException(ErrorStatus.FORBIDDEN_ACCESS_INVITE);
         }
 
         // 유저가 이미 해당 워크스페이스의 멤버인지 확인
         Optional<Member> existingMember = memberRepository.findByUserAndWorkspace(user, workspace);
         if (existingMember.isPresent()) {
-            throw new ApiException(ErrorStatus._CONFLICT_MEMBER);
+            throw new ApiException(ErrorStatus.CONFLICT_MEMBER);
         }
 
         Member member = new Member(
@@ -68,7 +64,7 @@ public class MemberService {
     public MemberResponseDto acceptWorkspace(Long memberId) {
 
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
-                new ApiException(ErrorStatus._NOT_FOUND_MEMBER));
+                new ApiException(ErrorStatus.NOT_FOUND_MEMBER));
 
         member.updateInvitationStatus(InvitationStatus.ACCEPT);
 
@@ -82,11 +78,11 @@ public class MemberService {
     @Transactional
     public MemberResponseDto changeRole(AuthUser authUser, Long memberId, MemberRequestDto requestDto) {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
-                new ApiException(ErrorStatus._NOT_FOUND_MEMBER));
+                new ApiException(ErrorStatus.NOT_FOUND_MEMBER));
 
         // 해당 워크스페이스의 admin인지 확인
         if (!Objects.equals(member.getWorkspace().getUser().getId(), authUser.getId())) {
-            throw new ApiException(ErrorStatus._FORBIDDEN_ACCESS_CHANGE_ROLE);
+            throw new ApiException(ErrorStatus.FORBIDDEN_ACCESS_CHANGE_ROLE);
         }
 
         member.updateRole(requestDto.getMemberRole());

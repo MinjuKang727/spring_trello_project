@@ -18,7 +18,7 @@ public class MemberAuthorizeService {
             return Optional.empty();
         }
         return user.getMemberList().stream()
-                .filter(member -> member.getWorkspace().getWorkspace_id().equals(workspaceId))
+                .filter(member -> member.getWorkspace().getId().equals(workspaceId))
                 .findFirst();
     }
 
