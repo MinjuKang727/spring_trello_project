@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.List;
 
 @Getter
-@Slf4j
 public class AuthUser {
 
     private final Long id;
