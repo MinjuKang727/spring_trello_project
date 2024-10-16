@@ -2,6 +2,7 @@ package com.sparta.springtrello.domain.workspace.service;
 
 
 import com.sparta.springtrello.common.ErrorStatus;
+import com.sparta.springtrello.common.RedisUtil;
 import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.domain.auth.dto.AuthUser;
 import com.sparta.springtrello.domain.user.entity.User;
@@ -25,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class WorkspaceService {
 
     private final WorkspaceRepository workspaceRepository;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisUtil redisUtil;
 
     private static final String WORKSPACE_DELETE_KEY = "workspace:";
 
@@ -112,6 +113,6 @@ public class WorkspaceService {
 
         // redis에 1시간 저장 후 삭제
         String redisKey = WORKSPACE_DELETE_KEY + workspaceId;
-        redisTemplate.opsForValue().set(redisKey, workspace, 60, TimeUnit.MINUTES);
+        redisUtil.contentsDelete(redisKey, workspace);
     }
 }

@@ -1,24 +1,22 @@
 package com.sparta.springtrello.domain.auth.service;
 
 import com.sparta.springtrello.common.ErrorStatus;
+import com.sparta.springtrello.common.RedisUtil;
 import com.sparta.springtrello.common.exception.ApiException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class EmailService {
 
     private final JavaMailSender javaMailSender;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisUtil redisUtil;
 
     @Value("${spring.mail.username}")
     private String SENDER_EMAIL;
@@ -45,7 +43,7 @@ public class EmailService {
         javaMailSender.send(message);
 
         // redis 저장
-        redisTemplate.opsForValue().set(redisKey, authNumber, 120, TimeUnit.SECONDS);
+        redisUtil.authEmail(redisKey, authNumber);
     }
 
     public int createAuthNumber() {

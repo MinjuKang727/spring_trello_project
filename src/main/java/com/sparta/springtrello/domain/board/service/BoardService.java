@@ -1,6 +1,7 @@
 package com.sparta.springtrello.domain.board.service;
 
 import com.sparta.springtrello.common.ErrorStatus;
+import com.sparta.springtrello.common.RedisUtil;
 import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.domain.board.dto.BoardRequestDto;
 import com.sparta.springtrello.domain.board.dto.BoardResponseDto;
@@ -9,7 +10,6 @@ import com.sparta.springtrello.domain.board.repository.BoardRepository;
 import com.sparta.springtrello.domain.workspace.entity.Workspace;
 import com.sparta.springtrello.domain.workspace.repository.WorkspaceRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class BoardService {
 
     private BoardRepository boardRepository;
     private WorkspaceRepository workspaceRepository;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisUtil redisUtil;
 
     private static final String BOARD_DELETE_KEY = "board:";
 
@@ -92,7 +92,7 @@ public class BoardService {
 
         // redis에 1시간 저장 후 삭제
         String redisKey = BOARD_DELETE_KEY + boardId;
-        redisTemplate.opsForValue().set(redisKey, board, 60, TimeUnit.MINUTES);
+        redisUtil.contentsDelete(redisKey, board);
     }
 
 }

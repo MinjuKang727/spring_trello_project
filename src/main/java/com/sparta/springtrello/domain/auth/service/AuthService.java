@@ -1,6 +1,7 @@
 package com.sparta.springtrello.domain.auth.service;
 
 import com.sparta.springtrello.common.ErrorStatus;
+import com.sparta.springtrello.common.RedisUtil;
 import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.common.exception.AuthException;
 import com.sparta.springtrello.config.JwtUtil;
@@ -13,7 +14,6 @@ import com.sparta.springtrello.domain.user.enums.UserRole;
 import com.sparta.springtrello.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final EmailService emailService;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisUtil redisUtil;
 
     private static final String AUTH_EMAIL_KEY = "authEmail:";
     private static final String WITHDRAW_KEY = "withdraw:";
@@ -36,15 +36,14 @@ public class AuthService {
     // 회원가입
     public SignupResponseDto signup(SignupRequestDto request) {
 
-        String withdrawRedisKey = WITHDRAW_KEY + request.getEmail();
-
         // DB 이메일 중복 검사
         if(userRepository.existsByEmail(request.getEmail())) {
             throw new ApiException(ErrorStatus.EMAIL_NOT_AVAILABLE);
         }
 
         // redis 이메일 중복 검사
-        if(redisTemplate.opsForValue().get(withdrawRedisKey) != null) {
+        String withdrawRedisKey = WITHDRAW_KEY + request.getEmail();
+        if(redisUtil.get(withdrawRedisKey) != null) {
             throw new ApiException(ErrorStatus.EMAIL_NOT_AVAILABLE);
         }
 
@@ -67,7 +66,7 @@ public class AuthService {
         String redisKey = verifyEmail(request);
 
         // redis에서 데이터 제거
-        redisTemplate.delete(redisKey);
+        redisUtil.delete(redisKey);
 
         User user = new User(
                 request.getEmail(),
@@ -104,7 +103,7 @@ public class AuthService {
     private String verifyEmail(SignupRequestDto requestDto) {
         String email = requestDto.getEmail();
         String redisKey = AUTH_EMAIL_KEY + requestDto.getEmail();
-        Integer authNumber = (Integer) redisTemplate.opsForValue().get(redisKey);
+        Integer authNumber = (Integer) redisUtil.get(redisKey);
 
         // 메일 인증 중인 email 인지 확인
         if(authNumber == null) {

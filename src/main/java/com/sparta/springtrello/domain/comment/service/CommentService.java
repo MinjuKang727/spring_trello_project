@@ -1,6 +1,7 @@
 package com.sparta.springtrello.domain.comment.service;
 
 import com.sparta.springtrello.common.ErrorStatus;
+import com.sparta.springtrello.common.RedisUtil;
 import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.domain.card.entity.Card;
 import com.sparta.springtrello.domain.card.repository.CardRespository;
@@ -9,10 +10,7 @@ import com.sparta.springtrello.domain.comment.dto.CommentResponseDto;
 import com.sparta.springtrello.domain.comment.entity.Comment;
 import com.sparta.springtrello.domain.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +18,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final CardRespository cardRespository;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisUtil redisUtil;
 
     private static final String COMMENT_DELETE_KEY = "comment:";
 
@@ -49,7 +47,7 @@ public class CommentService {
 
         // redis에 1시간 저장 후 삭제
         String redisKey = COMMENT_DELETE_KEY + commentId;
-        redisTemplate.opsForValue().set(redisKey, comment, 60, TimeUnit.MINUTES);
+        redisUtil.contentsDelete(redisKey, comment);
     }
 
     /**

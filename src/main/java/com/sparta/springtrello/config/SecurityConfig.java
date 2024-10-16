@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("**").permitAll()
+                        .requestMatchers("**").permitAll() // 임시
                         .requestMatchers("/test", "/admin/**").hasAuthority(UserRole.Authority.ADMIN)
                         .anyRequest().authenticated()
                 )
