@@ -2,6 +2,7 @@ package com.sparta.springtrello.domain.auth.dto;
 
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

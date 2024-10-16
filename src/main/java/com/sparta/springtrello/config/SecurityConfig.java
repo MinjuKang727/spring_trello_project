@@ -38,6 +38,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/test", "/admin/**").hasAuthority(UserRole.Authority.ADMIN)
+                        .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated() // 그 외의 API는 JWT가 있어야해요!
                 )
                 .build();

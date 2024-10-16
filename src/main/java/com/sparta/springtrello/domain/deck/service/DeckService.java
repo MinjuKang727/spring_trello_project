@@ -37,7 +37,7 @@ public class DeckService {
     @Transactional
     public DeckCreateResponse createDeck(Long boardId, String deckName) {
         Board board = this.boardRepository.findById(boardId).orElseThrow(
-                () -> new ApiException(ErrorStatus._NOT_FOUND_BOARD)
+                () -> new ApiException(ErrorStatus.NOT_FOUND_BOARD)
         );
 
         Deck deck = new Deck(deckName, board);
@@ -69,11 +69,11 @@ public class DeckService {
         List<Deck> deckList = this.deckRepository.findAllByBoardId(request.getBoardId());
 
         if (deckList.isEmpty()) {
-            throw new ApiException(ErrorStatus._NO_DECK_IN_BOARD);
+            throw new ApiException(ErrorStatus.NO_DECK_IN_BOARD);
         }
 
         Deck deck = this.deckRepository.findById(request.getDeckId()).orElseThrow(
-                () -> new ApiException(ErrorStatus._NOT_FOUND_DECK)
+                () -> new ApiException(ErrorStatus.NOT_FOUND_DECK)
         );
 
         deckList.remove(deck.getOrder());
@@ -95,7 +95,7 @@ public class DeckService {
     @Transactional
     public DeckResponse updateDeck(Long deckId, String deckName) {
         Deck deck = this.deckRepository.findById(deckId).orElseThrow(
-                () -> new ApiException(ErrorStatus._NOT_FOUND_DECK)
+                () -> new ApiException(ErrorStatus.NOT_FOUND_DECK)
         );
 
         deck.setName(deckName);
@@ -111,7 +111,7 @@ public class DeckService {
     @Transactional
     public void deleteDeck(Long deckId) {
         Deck deck = this.deckRepository.findById(deckId).orElseThrow(
-                () -> new ApiException(ErrorStatus._NOT_FOUND_DECK)
+                () -> new ApiException(ErrorStatus.NOT_FOUND_DECK)
         );
 
         deck.delete();

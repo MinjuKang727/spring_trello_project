@@ -12,7 +12,7 @@ public class UserResponseDto {
     private UserRole userRole;
 
     public UserResponseDto(User user) {
-        this.userId = user.getUserId();
+        this.userId = user.getId();
         this.email = user.getEmail();
         this.nickname = user.getNickname();
         this.userRole = user.getUserRole();
