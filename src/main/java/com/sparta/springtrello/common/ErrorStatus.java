@@ -25,6 +25,7 @@ public enum ErrorStatus implements BaseCode {
     FORBIDDEN_ACCESS_CHANGE_ROLE(HttpStatus.FORBIDDEN, 403, "해당 워크스페이스의 관리자가 아닙니다."),
     CONFLICT_MEMBER(HttpStatus.BAD_REQUEST, 400, "해당 유저는 이미 초대된 멤버입니다."),
     BAD_REQUEST_NOT_MEMBER(HttpStatus.BAD_REQUEST,404,"추가하려는 유저는 해당 워크스페이스의 멤버가 아닙니다."),
+    BAD_REQUEST_INVALID_WORKSPACE_ID(HttpStatus.BAD_REQUEST,400,"워크스페이스 ID가 잘못 입력되었습니다."),
 
     // 보드 관련 예외
     NOT_FOUND_BOARD(HttpStatus.NOT_FOUND, 404, "해당 보드를 찾을 수 없습니다."),

@@ -78,4 +78,8 @@ public class AuthService {
 
         return new SigninResponseDto(bearerToken);
     }
+
+    public static User fromAuthUser(AuthUser authUser) {
+        return new User(authUser.getId(), authUser.getEmail(), authUser.getUserRole());
+    }
 }
