@@ -11,6 +11,7 @@ import java.util.stream.IntStream;
 
 @Getter
 @Entity
+@NoArgsConstructor
 public class Board {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,4 +31,19 @@ public class Board {
 
     private String backgroundcolor;
     private String backgroundimage;
+
+    public Board(String title, Workspace workspace, String backgroundColor, String backgroundImage) {
+        this.title = title;
+        this.workspace = workspace;
+        this.backgroundColor = backgroundColor;
+        this.backgroundImage = backgroundImage;
+    }
+    public void updateBoard(String title, String backgroundColor, String backgroundImage) {
+        this.title = title;
+        this.backgroundColor = backgroundColor;
+        this.backgroundImage = backgroundImage;
+    }
+    public void Deleted() {
+        this.isDeleted = true;
+    }
 }
