@@ -9,12 +9,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface ManagerRepository extends JpaRepository<Manager,Long> {
-    @Query("SELECT m FROM Manager m WHERE m.member.id = :memberId")
+    @Query("SELECT m FROM Manager m WHERE m.member.id = :memberId AND m.isDeleted = false")
     Optional<Manager> findByMemberId(@Param("memberId") Long memberId);
 
     boolean existsByMember_Id(Long memberId);
-
-    Optional<Manager> findByMember(Member member);
 
     boolean existsByMember(Member member);
 }

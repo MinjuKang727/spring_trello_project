@@ -7,21 +7,27 @@ import com.sparta.springtrello.domain.card.entity.Card;
 import com.sparta.springtrello.domain.card.repository.CardRespository;
 import com.sparta.springtrello.domain.card.util.CardFinder;
 import com.sparta.springtrello.domain.manager.entity.Manager;
+import com.sparta.springtrello.domain.manager.repository.ManagerQueryDslRepository;
 import com.sparta.springtrello.domain.manager.repository.ManagerRepository;
 import com.sparta.springtrello.domain.manager.util.ManagerUtil;
 import com.sparta.springtrello.domain.member.entity.Member;
+import com.sparta.springtrello.domain.member.repository.MemberQueryDslRepository;
 import com.sparta.springtrello.domain.member.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ManagerService {
     private final ManagerRepository managerRepository;
     private final MemberRepository memberRepository;
+    private final ManagerQueryDslRepository managerQueryDslRepository;
     private final CardFinder cardFinder;
     private final CardRespository cardRespository;
     private final ManagerUtil managerUtil;
+    private final MemberQueryDslRepository memberQueryDslRepository;
 
     //담당자 추가
     public CardManagerChangedResponseDto addCardManager(Long workspaceId,
@@ -31,18 +37,22 @@ public class ManagerService {
         Card card = cardFinder.findById(cardId);
 
         //요청한 멤버가 해당 카드의 매니저인지
-        if (!isManager(card,requestedMember)) {
-            throw new ApiException(ErrorStatus.FORBIDDEN_NOT_MANAGER);
+        managerUtil.validateCardManager(requestedMember, card);
+
+        //추가해주려는 멤버가 해당 워크스페이스의 멤버인지,
+        if(!memberQueryDslRepository.isWorkspaceMember(memberId,workspaceId)) {
+            throw new ApiException(ErrorStatus.BAD_REQUEST_NOT_MEMBER);
         }
 
-        //추가해주려는 멤버가 해당 워크스페이스의 멤버인지
+        //추가해주려는 멤버가 이미 해당 카드의 매니저인지
+        if(managerQueryDslRepository.isMemberManager(card.getId(),memberId)) {
+            throw new ApiException(ErrorStatus.BAD_REQUEST_ALREADY_MANAGER);
+        }
+
+        //추가해주려는 멤버 객체
         Member foundMember = memberRepository.findById(memberId).orElseThrow(
                 () -> new ApiException(ErrorStatus.NOT_FOUND_MEMBER)
         );
-
-        if (!workspaceId.equals(foundMember.getWorkspace().getId())) {
-            throw new ApiException(ErrorStatus.BAD_REQUEST_NOT_MEMBER);
-        }
 
         //담당자 등록
         managerUtil.createManager(card, foundMember);
@@ -62,33 +72,28 @@ public class ManagerService {
     public CardManagerChangedResponseDto deleteCardManager(Member requestedMember, Long cardId, Long memberId) {
         Card card = cardFinder.findById(cardId);
 
-        if (!isManager(card,requestedMember)) {
+        //요청한 멤버가 해당 카드의 매니저인지
+        if(!managerQueryDslRepository.isMemberManager(card.getId(),requestedMember.getId())) {
             throw new ApiException(ErrorStatus.FORBIDDEN_NOT_MANAGER);
         }
 
-        Manager foundManager = managerRepository.findByMemberId(memberId).orElseThrow(
-                () -> new ApiException(ErrorStatus.BAD_REQUEST_NOT_MANAGER)
-        );
-
-        if (!foundManager.getCard().equals(card)) {
+        //삭제해주려는 멤버가 해당 카드의 매니저인지
+        if(!managerQueryDslRepository.isMemberManager(card.getId(),memberId)) {
             throw new ApiException(ErrorStatus.BAD_REQUEST_NOT_MANAGER);
         }
+
+        Manager foundManager = managerRepository.findByMemberId(memberId).orElseThrow(
+                () -> new ApiException(ErrorStatus.NOT_FOUND_MANAGER)
+        );
 
         foundManager.delete(card);
         managerRepository.save(foundManager);
         cardRespository.save(card);
+
         return new CardManagerChangedResponseDto(cardId,
                 card.getTitle(),
                 foundManager.getMember().getUser().getId(),
                 foundManager.getMember().getUser().getNickname());
     }
-
-    //요청 멤버가 해당 카드의 매니저인지 확인
-    private boolean isManager(Card card, Member requestedMember) {
-        return card.getManagerList().stream()
-                .anyMatch(manager -> manager.getMember().getId()
-                        .equals(requestedMember.getId()));
-    }
-
 }
 

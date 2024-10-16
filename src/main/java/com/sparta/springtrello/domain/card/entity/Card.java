@@ -33,9 +33,6 @@ public class Card  extends Timestamped {
     @JoinColumn(name = "deck_id")
     private Deck deck;
 
-    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
-    private java.util.List<Manager> managerList = new ArrayList<>();
-
     public Card(String title) {
         this.title = title;
     }
