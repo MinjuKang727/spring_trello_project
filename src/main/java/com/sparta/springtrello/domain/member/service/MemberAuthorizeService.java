@@ -1,8 +1,14 @@
 package com.sparta.springtrello.domain.member.service;
 
+import com.sparta.springtrello.common.ErrorStatus;
+import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.domain.member.entity.Member;
+import com.sparta.springtrello.domain.member.enums.InvitationStatus;
 import com.sparta.springtrello.domain.member.enums.MemberRole;
+import com.sparta.springtrello.domain.member.repository.MemberRepository;
 import com.sparta.springtrello.domain.user.entity.User;
+import com.sparta.springtrello.domain.workspace.entity.Workspace;
+import com.sparta.springtrello.domain.workspace.repository.WorkspaceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,15 +17,15 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class MemberAuthorizeService {
+    private final MemberRepository memberRepository;
+    private final WorkspaceRepository workspaceRepository;
 
     // 특정 workspaceId에 대한 Member 객체를 Optional로 반환하는 공통 메서드
     private Optional<Member> findMemberByWorkspaceId(User user, Long workspaceId) {
-        if (user == null) {
-            return Optional.empty();
-        }
-        return user.getMemberList().stream()
-                .filter(member -> member.getWorkspace().getId().equals(workspaceId))
-                .findFirst();
+        Workspace workspace = workspaceRepository.findById(workspaceId).orElseThrow(
+                ()-> new ApiException(ErrorStatus.NOT_FOUND_WORKSPACE)
+        );
+        return memberRepository.findAcceptedMember(user,workspace, InvitationStatus.ACCEPT);
     }
 
     // workspace에 접근할 수 있는지 검증
