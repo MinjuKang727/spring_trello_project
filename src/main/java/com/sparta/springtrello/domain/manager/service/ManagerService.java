@@ -86,8 +86,8 @@ public class ManagerService {
     //요청 멤버가 해당 카드의 매니저인지 확인
     private boolean isManager(Card card, Member requestedMember) {
         return card.getManagerList().stream()
-                .anyMatch(manager -> manager.getMember().getMemberId()
-                        .equals(requestedMember.getMemberId()));
+                .anyMatch(manager -> manager.getMember().getId()
+                        .equals(requestedMember.getId()));
     }
 
 }

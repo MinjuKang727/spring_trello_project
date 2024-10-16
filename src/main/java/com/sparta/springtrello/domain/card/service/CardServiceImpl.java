@@ -1,18 +1,15 @@
 package com.sparta.springtrello.domain.card.service;
 
-import com.sparta.springtrello.common.ErrorStatus;
-import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.domain.card.dto.request.CardCreateRequestDto;
 import com.sparta.springtrello.domain.card.dto.request.CardUpdateRequestDto;
+import com.sparta.springtrello.domain.card.dto.response.CardAttachmentResponseDto;
 import com.sparta.springtrello.domain.card.dto.response.CardCreateResponseDto;
-import com.sparta.springtrello.domain.card.dto.response.CardManagerChangedResponseDto;
 import com.sparta.springtrello.domain.card.dto.response.CardUpdateResponseDto;
 import com.sparta.springtrello.domain.card.entity.Card;
 import com.sparta.springtrello.domain.card.repository.CardRespository;
 import com.sparta.springtrello.domain.card.util.CardFinder;
 import com.sparta.springtrello.domain.deck.entity.Deck;
 import com.sparta.springtrello.domain.deck.util.DeckFinder;
-import com.sparta.springtrello.domain.manager.entity.Manager;
 import com.sparta.springtrello.domain.manager.repository.ManagerRepository;
 import com.sparta.springtrello.domain.manager.util.ManagerUtil;
 import com.sparta.springtrello.domain.member.entity.Member;
@@ -20,6 +17,7 @@ import com.sparta.springtrello.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -68,6 +66,8 @@ public class CardServiceImpl implements CardService {
                 savedCard.getContents(),
                 savedCard.getDeadline());
     }
+
+
 
 
 

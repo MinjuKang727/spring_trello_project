@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 public class ServiceExample {
 
     public String returnException() {
-        throw new ApiException(ErrorStatus._TEST_ERROR);
+        throw new ApiException(ErrorStatus.TEST_ERROR);
     }
 }

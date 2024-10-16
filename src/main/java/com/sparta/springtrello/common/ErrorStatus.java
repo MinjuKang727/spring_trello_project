@@ -25,12 +25,22 @@ public enum ErrorStatus implements BaseCode {
 
     //카드 관련 예외
     FORBIDDEN_READ_ONLY(HttpStatus.FORBIDDEN,403,"현재 권한이 읽기 전용입니다."),
-    FORBIDDEN_NOT_MANAGER(HttpStatus.FORBIDDEN,403,"현재 요청 멤버가 카드의 매니저가 아닙니다."),
-    BAD_REQUEST_NOT_MANAGER(HttpStatus.BAD_REQUEST,400,"해당 멤버는 카드의 매니저가 아닙니다."),
     NOT_FOUND_CARD(HttpStatus.NOT_FOUND,404,"해당 카드를 찾을 수 없습니다."),
+
+    //파일 관련 예외
+    INTERNAL_SERVER_ERROR_FAILED_CONVERT_FILE(HttpStatus.INTERNAL_SERVER_ERROR, 500, "파일 변환에 문제가 생겼습니다."),
+    BAD_REQUEST_EXCEED_FILE_SIZE(HttpStatus.BAD_REQUEST,400,"파일 크기는 5MB를 넘을 수 없습니다."),
+    BAD_REQUEST_INVALID_FILE_TYPE(HttpStatus.BAD_REQUEST,400,"지원되지 않는 파일입니다. 파일은 jpg,png,pdf,csv만 업로드할 수 있습니다."),
+    BAD_REQUEST_INVALID_FILE_NAME(HttpStatus.BAD_REQUEST,400,"파일명이 유효하지 않습니다."),
+
+    //매니저 관련 예외
+    NOT_FOUND_MANAGER(HttpStatus.NOT_FOUND,404,"해당 매니저를 찾을 수 없습니다."),
+
 
     //멤버 관련 예외
     NOT_FOUND_MEMBER(HttpStatus.NOT_FOUND,404,"해당 멤버를 찾을 수 없습니다."),
+    FORBIDDEN_NOT_MANAGER(HttpStatus.FORBIDDEN,403,"현재 요청 멤버가 카드의 매니저가 아닙니다."),
+    BAD_REQUEST_NOT_MANAGER(HttpStatus.BAD_REQUEST,400,"해당 멤버는 카드의 매니저가 아닙니다."),
 
     TEST_ERROR(HttpStatus.BAD_REQUEST, 400, "ApiException 예외 처리 테스트");
 

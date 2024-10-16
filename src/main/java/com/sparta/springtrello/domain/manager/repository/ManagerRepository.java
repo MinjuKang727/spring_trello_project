@@ -1,6 +1,7 @@
 package com.sparta.springtrello.domain.manager.repository;
 
 import com.sparta.springtrello.domain.manager.entity.Manager;
+import com.sparta.springtrello.domain.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,4 +14,7 @@ public interface ManagerRepository extends JpaRepository<Manager,Long> {
 
     boolean existsByMember_Id(Long memberId);
 
+    Optional<Manager> findByMember(Member member);
+
+    boolean existsByMember(Member member);
 }

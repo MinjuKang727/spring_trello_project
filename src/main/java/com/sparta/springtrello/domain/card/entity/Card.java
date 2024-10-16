@@ -63,4 +63,8 @@ public class Card  extends Timestamped {
     public void delete() {
         this.isDeleted = true;
     }
+
+    public void setAttachmentUrl(String attachmentUrl) {
+        this.attachment = attachmentUrl;
+    }
 }
