@@ -1,6 +1,6 @@
 package com.sparta.springtrello.config;
 
-import com.sparta.springtrello.common.dto.AuthUser;
+import com.sparta.springtrello.domain.auth.dto.AuthUser;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {

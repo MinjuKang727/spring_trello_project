@@ -2,15 +2,14 @@ package com.sparta.springtrello.domain.auth.service;
 
 import com.sparta.springtrello.common.exception.AuthException;
 import com.sparta.springtrello.config.JwtUtil;
-import com.sparta.springtrello.domain.auth.dto.SigninResponseDto;
 import com.sparta.springtrello.domain.auth.dto.SigninRequestDto;
+import com.sparta.springtrello.domain.auth.dto.SigninResponseDto;
 import com.sparta.springtrello.domain.auth.dto.SignupRequestDto;
 import com.sparta.springtrello.domain.auth.dto.SignupResponseDto;
 import com.sparta.springtrello.domain.user.entity.User;
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import com.sparta.springtrello.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

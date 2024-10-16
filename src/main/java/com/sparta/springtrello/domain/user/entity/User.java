@@ -1,6 +1,6 @@
 package com.sparta.springtrello.domain.user.entity;
 
-import com.sparta.springtrello.common.dto.AuthUser;
+import com.sparta.springtrello.domain.auth.dto.AuthUser;
 import com.sparta.springtrello.common.Timestamped;
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import jakarta.persistence.*;

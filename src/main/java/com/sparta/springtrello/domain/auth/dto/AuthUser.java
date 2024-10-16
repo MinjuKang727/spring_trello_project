@@ -1,4 +1,4 @@
-package com.sparta.springtrello.common.dto;
+package com.sparta.springtrello.domain.auth.dto;
 
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import lombok.Getter;
