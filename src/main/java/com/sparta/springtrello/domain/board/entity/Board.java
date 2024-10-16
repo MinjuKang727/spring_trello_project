@@ -26,7 +26,7 @@ public class Board {
     private Workspace workspace;
   
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderColumn(name = "deckk_order")  // 순서 칼럼 지정
+    @OrderColumn(name = "deck_order")  // 순서 칼럼 지정
     private List<Deck> deckList = new ArrayList<>();
 
     private String backgroundcolor;
