@@ -1,7 +1,5 @@
 package com.sparta.springtrello.domain.manager.entity;
 
-import com.sparta.springtrello.common.ErrorStatus;
-import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.domain.card.entity.Card;
 import com.sparta.springtrello.domain.member.entity.Member;
 import jakarta.persistence.*;
@@ -30,7 +28,7 @@ public class Manager {
         this.member = member;
     }
 
-    public void delete(Card card) {
+    public void delete() {
         this.isDeleted = true;
     }
 }

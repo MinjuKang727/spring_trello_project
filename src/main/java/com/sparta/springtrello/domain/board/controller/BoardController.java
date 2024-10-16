@@ -4,7 +4,6 @@ import com.sparta.springtrello.common.ApiResponse;
 import com.sparta.springtrello.domain.board.dto.BoardRequestDto;
 import com.sparta.springtrello.domain.board.dto.BoardResponseDto;
 import com.sparta.springtrello.domain.board.service.BoardService;
-import jakarta.validation.constraints.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -86,9 +86,8 @@ public class ManagerService {
                 () -> new ApiException(ErrorStatus.NOT_FOUND_MANAGER)
         );
 
-        foundManager.delete(card);
+        foundManager.delete();
         managerRepository.save(foundManager);
-        cardRespository.save(card);
 
         return new CardManagerChangedResponseDto(cardId,
                 card.getTitle(),

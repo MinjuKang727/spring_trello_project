@@ -3,14 +3,12 @@ package com.sparta.springtrello.domain.card.entity;
 import com.sparta.springtrello.common.Timestamped;
 import com.sparta.springtrello.domain.card.dto.request.CardUpdateRequestDto;
 import com.sparta.springtrello.domain.deck.entity.Deck;
-import com.sparta.springtrello.domain.manager.entity.Manager;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
-import java.util.ArrayList;
 
 @Getter
 @NoArgsConstructor

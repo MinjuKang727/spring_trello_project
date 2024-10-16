@@ -26,6 +26,7 @@ public class ManagerController {
                 requestedMember,cardId,toAddMemberId)));
     }
 
+    //담당자 삭제
     @DeleteMapping("/workspaces/{workspaceId}/boards/{boardId}/decks/{deckId}/{cardId}/manager")
     public ResponseEntity<ApiResponse<CardManagerChangedResponseDto>> deleteCardManager(@PathVariable Long workspaceId,
                                                                                         @PathVariable Long boardId,

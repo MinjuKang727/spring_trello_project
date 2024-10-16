@@ -20,7 +20,7 @@ public class MemberAuthorizeService {
     private final MemberRepository memberRepository;
     private final WorkspaceRepository workspaceRepository;
 
-    // 특정 workspaceId에 대한 Member 객체를 Optional로 반환하는 공통 메서드
+    // 특정 workspaceId에 대한 Member 객체를 Optional 반환하는 공통 메서드
     private Optional<Member> findMemberByWorkspaceId(User user, Long workspaceId) {
         Workspace workspace = workspaceRepository.findById(workspaceId).orElseThrow(
                 ()-> new ApiException(ErrorStatus.NOT_FOUND_WORKSPACE)
@@ -28,7 +28,7 @@ public class MemberAuthorizeService {
         return memberRepository.findAcceptedMember(user,workspace, InvitationStatus.ACCEPT);
     }
 
-    // workspace에 접근할 수 있는지 검증
+    // workspace 접근할 수 있는지 검증
     public boolean hasAccessToWorkspace(User user, Long workspaceId) {
         // 공통 메서드를 이용하여 Member 존재 여부를 확인
         return findMemberByWorkspaceId(user, workspaceId).isPresent();
