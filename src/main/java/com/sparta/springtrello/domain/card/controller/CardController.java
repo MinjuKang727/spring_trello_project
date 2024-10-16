@@ -4,14 +4,18 @@ import com.sparta.springtrello.annotation.RequestedMember;
 import com.sparta.springtrello.annotation.WorkspaceAccessButReadOnlyAuthorize;
 import com.sparta.springtrello.common.ApiResponse;
 import com.sparta.springtrello.domain.card.dto.request.CardCreateRequestDto;
+import com.sparta.springtrello.domain.card.dto.request.CardSearchRequestDto;
 import com.sparta.springtrello.domain.card.dto.request.CardUpdateRequestDto;
 import com.sparta.springtrello.domain.card.dto.response.CardAttachmentResponseDto;
 import com.sparta.springtrello.domain.card.dto.response.CardCreateResponseDto;
+import com.sparta.springtrello.domain.card.dto.response.CardSearchResponseDto;
 import com.sparta.springtrello.domain.card.dto.response.CardUpdateResponseDto;
 import com.sparta.springtrello.domain.card.service.CardAttachmentService;
 import com.sparta.springtrello.domain.card.service.CardService;
 import com.sparta.springtrello.domain.member.entity.Member;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -75,6 +79,15 @@ public class CardController {
                                                       @PathVariable Long cardId,
                                                       @RequestedMember Member member) {
         return ResponseEntity.ok(ApiResponse.onSuccess(cardService.delete(member,cardId)));
+    }
+
+    //카드 검색
+    @GetMapping("/workspaces/{workspaceId}/boards/{boardId}/decks/{deckId}/cards/search")
+    public ResponseEntity<ApiResponse<Page<CardSearchResponseDto>>> search(@PathVariable Long workspaceId,
+                                                                           @PathVariable Long boardId,
+                                                                           @PathVariable Long deckId,
+                                                                           @RequestBody @Valid CardSearchRequestDto requestDto) {
+        return ResponseEntity.ok(ApiResponse.onSuccess(cardService.searchCards(requestDto)));
     }
 
 }
