@@ -17,7 +17,7 @@ public class RedisConfig {
 
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-
+        template.setEnableTransactionSupport(true);
         return template;
     }
 }

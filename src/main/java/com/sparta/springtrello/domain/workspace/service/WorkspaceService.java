@@ -2,6 +2,7 @@ package com.sparta.springtrello.domain.workspace.service;
 
 
 import com.sparta.springtrello.common.ErrorStatus;
+import com.sparta.springtrello.common.GlobalUtil;
 import com.sparta.springtrello.common.RedisUtil;
 import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.domain.auth.dto.AuthUser;
@@ -12,13 +13,11 @@ import com.sparta.springtrello.domain.workspace.entity.Workspace;
 import com.sparta.springtrello.domain.workspace.repository.WorkspaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,6 +31,8 @@ public class WorkspaceService {
 
     @Transactional
     public WorkspaceResponseDto createWorkspace(AuthUser authUser, WorkspaceRequestDto requestDto) {
+
+        GlobalUtil.hasAuthUser(authUser);
 
         User user = User.fromAuthUser(authUser);
         Workspace newWorkspace = new Workspace(
@@ -50,6 +51,8 @@ public class WorkspaceService {
     }
 
     public WorkspaceResponseDto getWorkspace(AuthUser authUser, Long workspaceId) {
+
+        GlobalUtil.hasAuthUser(authUser);
 
         Workspace workspace = workspaceRepository.findById(workspaceId).orElseThrow(() ->
                 new ApiException(ErrorStatus.NOT_FOUND_WORKSPACE));

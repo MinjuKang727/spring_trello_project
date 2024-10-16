@@ -32,12 +32,12 @@ public class RedisUtil {
         redisTemplate.opsForValue().set(key, object, 60, TimeUnit.MINUTES);
     }
 
-    public void setLogOut(String key, Object object, int minutes) {
-        redisTemplate.opsForValue().set(key, object, minutes, TimeUnit.MINUTES);
+    public void setLogOut(String key, Object object, Long millisecond) {
+        redisTemplate.opsForValue().set(key, object, millisecond, TimeUnit.MILLISECONDS);
     }
 
-    public Object getLogOut(String key) {
-        return redisTemplate.opsForValue().get(key);
+    public boolean hasKeyLogOut(String key) {
+        return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
 
 }
