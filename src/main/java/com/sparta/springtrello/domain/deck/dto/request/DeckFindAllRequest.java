@@ -5,12 +5,12 @@ import lombok.Getter;
 @Getter
 public class DeckFindAllRequest {
     private final Long boardId;
-    private final Long page;
-    private final Long size;
+    private final Integer page;
+    private final Integer size;
 
-    public DeckFindAllRequest(Long boardId, Long page, Long size) {
+    public DeckFindAllRequest(Long boardId, Integer page, Integer size) {
         this.boardId = boardId;
-        this.page = page;
-        this.size = size;
+        this.page = page == null ? 1 : page;
+        this.size = size == null ? 10 : size;
     }
 }

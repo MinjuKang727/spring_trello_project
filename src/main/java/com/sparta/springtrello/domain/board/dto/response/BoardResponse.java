@@ -1,11 +1,15 @@
 package com.sparta.springtrello.domain.board.dto.response;
 
+import com.sparta.springtrello.domain.board.entity.Board;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
 public class BoardResponse {
-    private final Long boardId;
-    private final String boardName;
+    private final Long id;
+    private final String title;
+
+    public BoardResponse(Board board) {
+        this.id = board.getId();
+        this.title = board.getTitle();
+    }
 }
