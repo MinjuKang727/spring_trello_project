@@ -19,9 +19,11 @@ public class Notification extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notification_id")
     private Long id;
+    @Enumerated(EnumType.STRING)
     private NotificationCategory category;
+    @Column(length = 255)
     private String message;
-    private Boolean isDeleted;
+    private boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workspace_id")
