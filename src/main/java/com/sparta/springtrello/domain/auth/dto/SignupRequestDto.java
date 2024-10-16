@@ -18,5 +18,6 @@ public class SignupRequestDto {
     private String nickname;
 
     private String adminKey;
-    //private int authNumber;
+
+    private int authNumber;
 }
