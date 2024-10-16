@@ -30,8 +30,4 @@ public class Board {
 
     private String backgroundcolor;
     private String backgroundimage;
-
-    public void addDeck(Deck deck) {
-        this.deckList.add(deck);
-    }
 }

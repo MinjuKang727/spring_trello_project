@@ -17,7 +17,7 @@ import org.springframework.security.web.servletapi.SecurityContextHolderAwareReq
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtSecurityFilter jwtSecurityFilter;

@@ -2,6 +2,7 @@ package com.sparta.springtrello.domain.user.entity;
 
 import com.sparta.springtrello.domain.auth.dto.AuthUser;
 import com.sparta.springtrello.common.Timestamped;
+import com.sparta.springtrello.domain.notification.entity.SlackUser;
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,8 +24,10 @@ public class User extends Timestamped {
     private String nickname;
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
-    @ColumnDefault("false")
     private boolean isDeleted;
+
+    private String kakaoId;
+    private String slackId;
 
     public User(String email, String password, String nickname, UserRole userRole) {
         this.email = email;
@@ -39,7 +42,21 @@ public class User extends Timestamped {
         this.userRole = userRole;
     }
 
+    public User(SlackUser slackUser, String password) {
+        this.email = slackUser.getEmail();
+        this.nickname = slackUser.getName();
+        this.password = password;
+        this.userRole = UserRole.ROLE_USER;
+        this.slackId = slackUser.getSlackId();
+    }
+
     public static User fromAuthUser(AuthUser authUser) {
         return new User(authUser.getId(), authUser.getEmail(), authUser.getUserRole());
+    }
+
+    public User slackIdUpdate(String slackId) {
+        this.slackId = slackId;
+
+        return this;
     }
 }

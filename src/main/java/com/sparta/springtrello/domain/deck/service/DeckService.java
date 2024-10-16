@@ -41,9 +41,9 @@ public class DeckService {
         );
 
         Deck deck = new Deck(deckName, board);
-        board.addDeck(deck);
+        Deck savedDeck = this.deckRepository.save(deck);
 
-        return new DeckCreateResponse(deck);
+        return new DeckCreateResponse(savedDeck);
     }
 
 
