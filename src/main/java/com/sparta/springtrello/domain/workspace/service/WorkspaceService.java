@@ -26,7 +26,6 @@ import java.util.List;
 public class WorkspaceService {
 
     private final WorkspaceRepository workspaceRepository;
-    private final MemberRepository memberRepository;
 
     @Transactional
     public WorkspaceResponseDto createWorkspace(AuthUser authUser, WorkspaceRequestDto requestDto) {
@@ -53,7 +52,7 @@ public class WorkspaceService {
     public WorkspaceResponseDto getWorkspace(AuthUser authUser, Long workspaceId) {
 
         Workspace workspace = workspaceRepository.findById(workspaceId).orElseThrow(() ->
-                new NullPointerException("Not found"));
+                new ApiException(ErrorStatus._NOT_FOUND_WORKSPACE));
 
         // workspace의 멤버 목록에 authUser가 포함되어 있는지 확인
         boolean isMember = workspace.getMemberList().stream()
@@ -61,7 +60,7 @@ public class WorkspaceService {
 
         // authUser가 멤버가 아니면 예외 발생
         if (!isMember) {
-            throw new IllegalArgumentException("해당 워크스페이스의 멤버가 아닙니다.");
+            throw new ApiException(ErrorStatus._FORBIDDEN_ACCESS);
         }
 
         return new WorkspaceResponseDto(
@@ -94,7 +93,7 @@ public class WorkspaceService {
             throw new ApiException(ErrorStatus._FORBIDDEN_TOKEN);
         }
         Workspace workspace = workspaceRepository.findById(workspaceId).orElseThrow(() ->
-                new NullPointerException("Not found"));
+                new ApiException(ErrorStatus._NOT_FOUND_WORKSPACE));
         workspace.update(
                 requestDto.getName(),
                 requestDto.getDescription()
@@ -115,7 +114,7 @@ public class WorkspaceService {
             throw new ApiException(ErrorStatus._FORBIDDEN_TOKEN);
         }
         Workspace workspace = workspaceRepository.findById(workspaceId).orElseThrow(() ->
-                new NullPointerException("Not found"));
+                new ApiException(ErrorStatus._NOT_FOUND_WORKSPACE));
         workspace.deleteWorkspace();
     }
 }

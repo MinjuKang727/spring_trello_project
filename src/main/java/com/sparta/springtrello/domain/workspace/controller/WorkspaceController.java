@@ -23,55 +23,53 @@ public class WorkspaceController {
 
     // 생성
     @PostMapping("/workspaces")
-    public ApiResponse<WorkspaceResponseDto> createWorkspace(
+    public ResponseEntity<ApiResponse<WorkspaceResponseDto>> createWorkspace(
             @AuthenticationPrincipal AuthUser authUser,
             @RequestBody WorkspaceRequestDto requestDto
     ) {
         WorkspaceResponseDto responseDto = workspaceService.createWorkspace(authUser, requestDto);
-        return ApiResponse.onSuccess(responseDto);
+        return ResponseEntity.ok(ApiResponse.onSuccess(responseDto));
     }
 
     // 단건 조회
     @GetMapping("/workspaces/{workspaceId}")
-    public ApiResponse<WorkspaceResponseDto> getWorkspace(
+    public ResponseEntity<ApiResponse<WorkspaceResponseDto>> getWorkspace(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long workspaceId
     ) {
         WorkspaceResponseDto responseDto = workspaceService.getWorkspace(authUser, workspaceId);
-        return ApiResponse.onSuccess(responseDto);
+        return ResponseEntity.ok(ApiResponse.onSuccess(responseDto));
     }
 
     // 전부 조회
     @GetMapping("/workspaces")
-    public ApiResponse<List<WorkspaceResponseDto>> getWorkspaces(
+    public ResponseEntity<ApiResponse<List<WorkspaceResponseDto>>> getWorkspaces(
             @AuthenticationPrincipal AuthUser authUser
     ) {
         List<WorkspaceResponseDto> responseDto = workspaceService.getWorkspaces(authUser);
-        return ApiResponse.onSuccess(responseDto);
+        return ResponseEntity.ok(ApiResponse.onSuccess(responseDto));
     }
 
     // 수정
     @PutMapping("/workspaces/{workspaceId}")
-    public ApiResponse<WorkspaceResponseDto> update(
+    public ResponseEntity<ApiResponse<WorkspaceResponseDto>> update(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long workspaceId,
             @RequestBody WorkspaceRequestDto requestDto
     ) {
         WorkspaceResponseDto responseDto = workspaceService.update(authUser, workspaceId, requestDto);
-        return ApiResponse.onSuccess(responseDto);
+        return ResponseEntity.ok(ApiResponse.onSuccess(responseDto));
     }
 
     // 삭제
     @DeleteMapping("/workspaces/{workspaceId}")
-    public ApiResponse<Void> delete(
+    public ResponseEntity<ApiResponse<Void>> delete(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long workspaceId
     ) {
         workspaceService.delete(authUser, workspaceId);
-        return ApiResponse.onSuccess(null);
+        return ResponseEntity.ok(ApiResponse.onSuccess(null));
     }
-
-
 
 
 }

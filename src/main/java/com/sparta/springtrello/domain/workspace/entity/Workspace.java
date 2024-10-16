@@ -32,7 +32,7 @@ public class Workspace {
     private Boolean is_deleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "admin_user_id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
