@@ -31,7 +31,7 @@ public class MemberAuthorizeService {
     // 워크스페이스에 대한 역할이 READ_ONLY인지 검증
     public boolean hasReadOnlyRole(User user, Long workspaceId) {
         return findMemberByWorkspaceId(user, workspaceId)
-                .map(member -> member.getMemberRole() == MemberRole.READ_ONLY)
+                .map(member -> member.getMemberRole() != MemberRole.READ_ONLY)
                 .orElse(false);
     }
 
