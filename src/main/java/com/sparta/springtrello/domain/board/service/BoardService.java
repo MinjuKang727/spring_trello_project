@@ -6,7 +6,6 @@ import com.sparta.springtrello.domain.board.dto.BoardRequestDto;
 import com.sparta.springtrello.domain.board.dto.BoardResponseDto;
 import com.sparta.springtrello.domain.board.entity.Board;
 import com.sparta.springtrello.domain.board.repository.BoardRepository;
-import com.sparta.springtrello.domain.comment.entity.Comment;
 import com.sparta.springtrello.domain.workspace.entity.Workspace;
 import com.sparta.springtrello.domain.workspace.repository.WorkspaceRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ public class BoardService {
 
     private BoardRepository boardRepository;
     private WorkspaceRepository workspaceRepository;
-    private final RedisTemplate<String, Board> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private static final String BOARD_DELETE_KEY = "board:";
 

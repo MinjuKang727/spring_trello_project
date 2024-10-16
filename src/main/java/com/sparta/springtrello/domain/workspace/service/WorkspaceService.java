@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class WorkspaceService {
 
     private final WorkspaceRepository workspaceRepository;
-    private final RedisTemplate<String, Workspace> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private static final String WORKSPACE_DELETE_KEY = "workspace:";
 

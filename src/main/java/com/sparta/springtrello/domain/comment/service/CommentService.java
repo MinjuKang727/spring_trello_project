@@ -20,7 +20,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final CardRespository cardRespository;
-    private final RedisTemplate<String, Comment> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private static final String COMMENT_DELETE_KEY = "comment:";
 

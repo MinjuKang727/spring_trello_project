@@ -29,7 +29,7 @@ public class DeckService {
 
     private final DeckRepository deckRepository;
     private final BoardRepository boardRepository;
-    private final RedisTemplate<String, Deck> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private static final String DECK_DELETE_KEY = "deck:";
 
