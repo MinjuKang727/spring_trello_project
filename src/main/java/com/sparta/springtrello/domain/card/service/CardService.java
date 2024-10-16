@@ -62,4 +62,17 @@ public class CardService{
                 savedCard.getContents(),
                 savedCard.getDeadline());
     }
+
+    //카드 논리적 삭제
+    /*
+    1.현재 멤버가 카드의 매니저인지?
+     */
+    public String delete(Member requestedMember, Long cardId) {
+        Card card = cardFinder.findById(cardId);
+
+        managerUtil.validateCardManager(requestedMember,card);
+        card.delete();
+
+        return "삭제가 완료되었습니다.";
+    }
 }

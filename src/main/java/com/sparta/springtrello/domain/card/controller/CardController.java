@@ -67,5 +67,15 @@ public class CardController {
         return ResponseEntity.ok(ApiResponse.onSuccess(cardAttachmentService.attachFileToCard(member,cardId,file)));
     }
 
+    //카드 삭제
+    @DeleteMapping("/workspaces/{workspaceId}/boards/{boardId}/decks/{deckId}/{cardId}")
+    public ResponseEntity<ApiResponse<String>> delete(@PathVariable Long workspaceId,
+                                                      @PathVariable Long boardId,
+                                                      @PathVariable Long deckId,
+                                                      @PathVariable Long cardId,
+                                                      @RequestedMember Member member) {
+        return ResponseEntity.ok(ApiResponse.onSuccess(cardService.delete(member,cardId)));
+    }
+
 }
 
