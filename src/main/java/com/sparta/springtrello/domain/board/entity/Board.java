@@ -12,7 +12,9 @@ import java.util.ArrayList;
 @NoArgsConstructor
 public class Board {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column(name = "board_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
