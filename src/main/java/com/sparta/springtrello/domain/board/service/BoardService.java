@@ -6,9 +6,7 @@ import com.sparta.springtrello.domain.board.dto.BoardRequestDto;
 import com.sparta.springtrello.domain.board.dto.BoardResponseDto;
 import com.sparta.springtrello.domain.board.entity.Board;
 import com.sparta.springtrello.domain.board.repository.BoardRepository;
-
 import com.sparta.springtrello.domain.workspace.entity.Workspace;
-
 import com.sparta.springtrello.domain.workspace.repository.WorkspaceRepository;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +30,8 @@ public class BoardService {
        return new BoardResponseDto(createBoard.getId(),
                createBoard.getTitle(),
                boardRequestDto.getWorkspacesid(),
-               createBoard.getBackgroundColor(),
-               createBoard.getBackgroundImage(),
+               createBoard.getBackgroundcolor(),
+               createBoard.getBackgroundimage(),
                createBoard.isDeleted()
        );
     }
@@ -44,8 +42,8 @@ public class BoardService {
                 .map(board -> new BoardResponseDto(board.getId(),
                         board.getTitle(),
                         workspacesId,
-                        board.getBackgroundColor(),
-                        board.getBackgroundImage(),
+                        board.getBackgroundcolor(),
+                        board.getBackgroundimage(),
                         board.isDeleted()))
                 .collect(Collectors.toList()
                 );
@@ -56,8 +54,8 @@ public class BoardService {
         return new BoardResponseDto(board.getId(),
                 board.getTitle(),
                 board.getWorkspace().getId(),
-                board.getBackgroundColor(),
-                board.getBackgroundImage(),
+                board.getBackgroundcolor(),
+                board.getBackgroundimage(),
                 board.isDeleted()
         );
     }
@@ -72,8 +70,8 @@ public class BoardService {
         return new BoardResponseDto(board.getId(),
                 board.getTitle(),
                 board.getWorkspace().getId(),
-                board.getBackgroundColor(),
-                board.getBackgroundImage(),
+                board.getBackgroundcolor(),
+                board.getBackgroundimage(),
                 board.isDeleted()
         );
     }

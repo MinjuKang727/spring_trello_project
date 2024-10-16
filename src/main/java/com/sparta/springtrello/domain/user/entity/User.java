@@ -1,7 +1,8 @@
 package com.sparta.springtrello.domain.user.entity;
 
-import com.sparta.springtrello.domain.auth.dto.AuthUser;
 import com.sparta.springtrello.common.Timestamped;
+import com.sparta.springtrello.domain.auth.dto.AuthUser;
+import com.sparta.springtrello.domain.member.entity.Member;
 import com.sparta.springtrello.domain.notification.entity.SlackUser;
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import jakarta.persistence.*;
@@ -9,25 +10,46 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @RequiredArgsConstructor
 @Table(name = "users")
 public class User extends Timestamped {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    @Id
+    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(length = 50, unique = true)
     private String email;
+
     private String password;
+
     @Column(length = 20)
     private String nickname;
+
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
-    private boolean isDeleted;
 
-    private String kakaoId;
+    @ColumnDefault("false")
+    private boolean isDeleted;
+    @Column(length = 20)
+    private Long kakaoId;
     private String slackId;
+
+    public User(String nickname, String email, UserRole userRole, Long kakaoId) {
+        this.nickname = nickname;
+        this.email = email;
+        this.userRole = userRole;
+        this.kakaoId = kakaoId;
+    }
+
+    @OneToMany(mappedBy = "user")
+    List<Member> memberList = new ArrayList<>();
 
     public User(String email, String password, String nickname, UserRole userRole) {
         this.email = email;
@@ -36,8 +58,12 @@ public class User extends Timestamped {
         this.userRole = userRole;
     }
 
-    private User(Long userId, String email, UserRole userRole) {
-        this.userId = userId;
+    public void InsertKakaoId(Long kakaoId) {
+        this.kakaoId = kakaoId;
+    }
+
+    private User(Long id, String email, UserRole userRole) {
+        this.id = id;
         this.email = email;
         this.userRole = userRole;
     }
@@ -52,6 +78,10 @@ public class User extends Timestamped {
 
     public static User fromAuthUser(AuthUser authUser) {
         return new User(authUser.getId(), authUser.getEmail(), authUser.getUserRole());
+    }
+
+    public void delete() {
+        this.isDeleted = true;
     }
 
     public User slackIdUpdate(String slackId) {

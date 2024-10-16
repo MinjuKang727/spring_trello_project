@@ -1,5 +1,6 @@
 package com.sparta.springtrello.config;
 
+import com.sparta.springtrello.domain.auth.service.CustomOAuth2UserService;
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,7 @@ import org.springframework.security.web.servletapi.SecurityContextHolderAwareReq
 public class SecurityConfig {
 
     private final JwtSecurityFilter jwtSecurityFilter;
+    private final CustomOAuth2UserService oAuth2UserService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -37,9 +39,14 @@ public class SecurityConfig {
                 .addFilterBefore(jwtSecurityFilter, SecurityContextHolderAwareRequestFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("**").permitAll()
                         .requestMatchers("/test", "/admin/**").hasAuthority(UserRole.Authority.ADMIN)
-                        .requestMatchers("/**").permitAll()
-                        .anyRequest().authenticated() // 그 외의 API는 JWT가 있어야해요!
+                        .anyRequest().authenticated()
+                )
+                .oauth2Login(auth -> auth
+                        // OAuth2 로그인 성공 후 사용자 정보를 가져올 때 설정 담당)
+                        .userInfoEndpoint(user -> user.userService(oAuth2UserService))
                 )
                 .build();
     }
