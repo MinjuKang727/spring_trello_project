@@ -11,11 +11,13 @@ import com.sparta.springtrello.domain.workspace.entity.Workspace;
 import com.sparta.springtrello.domain.workspace.repository.WorkspaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,6 +25,9 @@ import java.util.List;
 public class WorkspaceService {
 
     private final WorkspaceRepository workspaceRepository;
+    private final RedisTemplate<String, Workspace> redisTemplate;
+
+    private static final String WORKSPACE_DELETE_KEY = "workspace:";
 
     @Transactional
     public WorkspaceResponseDto createWorkspace(AuthUser authUser, WorkspaceRequestDto requestDto) {
@@ -104,5 +109,9 @@ public class WorkspaceService {
         Workspace workspace = workspaceRepository.findById(workspaceId).orElseThrow(() ->
                 new ApiException(ErrorStatus.NOT_FOUND_WORKSPACE));
         workspace.deleteWorkspace();
+
+        // redis에 1시간 저장 후 삭제
+        String redisKey = WORKSPACE_DELETE_KEY + workspaceId;
+        redisTemplate.opsForValue().set(redisKey, workspace, 60, TimeUnit.MINUTES);
     }
 }

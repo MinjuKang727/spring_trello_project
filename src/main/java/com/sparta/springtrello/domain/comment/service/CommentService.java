@@ -4,14 +4,15 @@ import com.sparta.springtrello.common.ErrorStatus;
 import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.domain.card.entity.Card;
 import com.sparta.springtrello.domain.card.repository.CardRespository;
-import com.sparta.springtrello.domain.comment.controller.CommentController;
 import com.sparta.springtrello.domain.comment.dto.CommentRequestDto;
 import com.sparta.springtrello.domain.comment.dto.CommentResponseDto;
 import com.sparta.springtrello.domain.comment.entity.Comment;
 import com.sparta.springtrello.domain.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,9 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final CardRespository cardRespository;
+    private final RedisTemplate<String, Comment> redisTemplate;
+
+    private static final String COMMENT_DELETE_KEY = "comment:";
 
     public CommentResponseDto createComment( Long cardId, CommentRequestDto commentRequestDto){
         //카드가 존재하는지 확인
@@ -42,6 +46,10 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new ApiException(ErrorStatus.NOT_FOUND_COMMENT));
         comment.delete();
         commentRepository.save(comment);
+
+        // redis에 1시간 저장 후 삭제
+        String redisKey = COMMENT_DELETE_KEY + commentId;
+        redisTemplate.opsForValue().set(redisKey, comment, 60, TimeUnit.MINUTES);
     }
 
     /**

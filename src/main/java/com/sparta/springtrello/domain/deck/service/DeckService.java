@@ -15,10 +15,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +29,9 @@ public class DeckService {
 
     private final DeckRepository deckRepository;
     private final BoardRepository boardRepository;
+    private final RedisTemplate<String, Deck> redisTemplate;
+
+    private static final String DECK_DELETE_KEY = "deck:";
 
     /**
      * 덱 생성
@@ -110,11 +115,16 @@ public class DeckService {
      */
     @Transactional
     public void deleteDeck(Long deckId) {
+
         Deck deck = this.deckRepository.findById(deckId).orElseThrow(
                 () -> new ApiException(ErrorStatus.NOT_FOUND_DECK)
         );
 
         deck.delete();
+
+        // redis에 1시간 저장 후 삭제
+        String redisKey = DECK_DELETE_KEY + deckId;
+        redisTemplate.opsForValue().set(redisKey, deck, 60, TimeUnit.MINUTES);
     }
 
 
