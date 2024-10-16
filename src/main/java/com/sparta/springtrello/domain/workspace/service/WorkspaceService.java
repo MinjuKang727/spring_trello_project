@@ -30,7 +30,7 @@ public class WorkspaceService {
         Workspace savedWorkspace = workspaceRepository.save(newWorkspace);
 
         return new WorkspaceResponseDto(
-                savedWorkspace.getWorkspace_id(),
+                savedWorkspace.getId(),
                 savedWorkspace.getName(),
                 savedWorkspace.getDescription()
         );
@@ -44,7 +44,7 @@ public class WorkspaceService {
                 new NullPointerException("Not found"));
 
         return new WorkspaceResponseDto(
-                workspace.getWorkspace_id(),
+                workspace.getId(),
                 workspace.getName(),
                 workspace.getDescription()
         );
@@ -76,7 +76,7 @@ public class WorkspaceService {
         );
         workspaceRepository.save(workspace);
         return new WorkspaceResponseDto(
-                workspace.getWorkspace_id(),
+                workspace.getId(),
                 workspace.getName(),
                 workspace.getDescription()
         );

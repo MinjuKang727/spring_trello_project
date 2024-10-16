@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "notifications")
 @NoArgsConstructor
 public class Notification extends Timestamped {
 

@@ -1,6 +1,7 @@
 package com.sparta.springtrello.domain.workspace.entity;
 
 
+import com.sparta.springtrello.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +17,8 @@ import java.util.List;
 public class Workspace {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long workspace_id;
+    @Column(name = "workspace_id")
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -27,9 +29,9 @@ public class Workspace {
     @Column
     private Boolean is_deleted = false;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", nullable = false)
-//    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
 //    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
 //    private List<Board> boardList = new ArrayList<>();
