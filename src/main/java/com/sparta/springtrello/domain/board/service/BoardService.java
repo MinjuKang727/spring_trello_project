@@ -32,8 +32,8 @@ public class BoardService {
        return new BoardResponseDto(createBoard.getId(),
                createBoard.getTitle(),
                boardRequestDto.getWorkspacesid(),
-               createBoard.getBackgroundColor(),
-               createBoard.getBackgroundImage(),
+               createBoard.getBackgroundcolor(),
+               createBoard.getBackgroundimage(),
                createBoard.isDeleted()
        );
     }
@@ -44,8 +44,8 @@ public class BoardService {
                 .map(board -> new BoardResponseDto(board.getId(),
                         board.getTitle(),
                         workspacesId,
-                        board.getBackgroundColor(),
-                        board.getBackgroundImage(),
+                        board.getBackgroundcolor(),
+                        board.getBackgroundimage(),
                         board.isDeleted()))
                 .collect(Collectors.toList()
                 );
@@ -56,8 +56,8 @@ public class BoardService {
         return new BoardResponseDto(board.getId(),
                 board.getTitle(),
                 board.getWorkspace().getId(),
-                board.getBackgroundColor(),
-                board.getBackgroundImage(),
+                board.getBackgroundcolor(),
+                board.getBackgroundimage(),
                 board.isDeleted()
         );
     }
@@ -72,8 +72,8 @@ public class BoardService {
         return new BoardResponseDto(board.getId(),
                 board.getTitle(),
                 board.getWorkspace().getId(),
-                board.getBackgroundColor(),
-                board.getBackgroundImage(),
+                board.getBackgroundcolor(),
+                board.getBackgroundimage(),
                 board.isDeleted()
         );
     }
@@ -82,7 +82,7 @@ public class BoardService {
     public void deleteBoard(Long boardId) {
 
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new ApiException(ErrorStatus.NOT_FOUND_BOARD));
-        board.Deleted();
+        board.delete();
         boardRepository.save(board);
     }
 
