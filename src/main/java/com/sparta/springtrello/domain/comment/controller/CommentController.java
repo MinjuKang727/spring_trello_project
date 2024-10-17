@@ -1,15 +1,11 @@
 package com.sparta.springtrello.domain.comment.controller;
 
 import com.sparta.springtrello.common.ApiResponse;
-import com.sparta.springtrello.common.ErrorStatus;
-import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.domain.comment.dto.CommentRequestDto;
 import com.sparta.springtrello.domain.comment.dto.CommentResponseDto;
 import com.sparta.springtrello.domain.comment.entity.Comment;
-import com.sparta.springtrello.domain.comment.repository.CommentRepository;
 import com.sparta.springtrello.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

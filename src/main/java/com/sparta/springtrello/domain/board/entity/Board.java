@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Getter
 @Entity
@@ -21,8 +22,6 @@ public class Board {
     @Column(nullable = false)
     private String title;
 
-    private boolean isDeleted;
-
     @ManyToOne
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
@@ -31,23 +30,25 @@ public class Board {
     @OrderColumn(name = "deck_order")  // 순서 칼럼 지정
     private List<Deck> deckList = new ArrayList<>();
 
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
+
     private String backgroundcolor;
     private String backgroundimage;
 
-    public Board(String title, Workspace workspace, String backgroundcolor, String backgroundimage) {
+    public Board(String title, Workspace workspace, String backgroundColor, String backgroundImage) {
         this.title = title;
         this.workspace = workspace;
-        this.backgroundcolor = backgroundcolor;
-        this.backgroundimage = backgroundimage;
+        this.backgroundcolor = backgroundColor;
+        this.backgroundimage = backgroundImage;
     }
 
-    public void updateBoard(String title, String backgroundcolor, String backgroundimage) {
+    public void updateBoard(String title, String backgroundColor, String backgroundImage) {
         this.title = title;
-        this.backgroundcolor = backgroundcolor;
-        this.backgroundimage = backgroundimage;
+        this.backgroundcolor = backgroundColor;
+        this.backgroundimage = backgroundImage;
     }
-
-    public void delete() {
+    public void deleted() {
         this.isDeleted = true;
     }
 }

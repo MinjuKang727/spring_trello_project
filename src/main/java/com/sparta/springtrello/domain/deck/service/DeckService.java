@@ -1,6 +1,7 @@
 package com.sparta.springtrello.domain.deck.service;
 
 import com.sparta.springtrello.common.ErrorStatus;
+import com.sparta.springtrello.common.RedisUtil;
 import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.domain.board.entity.Board;
 import com.sparta.springtrello.domain.board.repository.BoardRepository;
@@ -27,6 +28,9 @@ public class DeckService {
 
     private final DeckRepository deckRepository;
     private final BoardRepository boardRepository;
+    private final RedisUtil redisUtil;
+
+    private static final String DECK_DELETE_KEY = "deck:";
 
     /**
      * 덱 생성
@@ -110,11 +114,16 @@ public class DeckService {
      */
     @Transactional
     public void deleteDeck(Long deckId) {
+
         Deck deck = this.deckRepository.findById(deckId).orElseThrow(
                 () -> new ApiException(ErrorStatus.NOT_FOUND_DECK)
         );
 
         deck.delete();
+
+        // redis에 1시간 저장 후 삭제
+        String redisKey = DECK_DELETE_KEY + deckId;
+        redisUtil.contentsDelete(redisKey, deck);
     }
 
 

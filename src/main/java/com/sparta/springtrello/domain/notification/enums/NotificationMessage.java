@@ -24,7 +24,9 @@ public enum NotificationMessage {
     CARD_MANAGEER_DELETED("카드 담당자가 삭제되었습니다."),
 
     // 댓글
-    NEW_COMMENT_ON_CARD("카드에 새로운 댓글이 등록되었습니다.")
+    COMMENT_CREATED("카드에 새로운 댓글이 등록되었습니다."),
+    COMMENT_UPDATED("댓글 내용이 변경되었습니다."),
+    COMMENT_DELETED("댓글이 삭제되었습니다.")
 
     ;
 

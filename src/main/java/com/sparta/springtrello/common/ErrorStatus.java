@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorStatus implements BaseCode {
+    BAD_REQUEST_EMPTY_TITLE(HttpStatus.BAD_REQUEST, 400, "제목이 비어 있습니다."),
+
     //예외 예시
     BAD_REQUEST_UNSUPPORTED_TOKEN(HttpStatus.BAD_REQUEST,400,"지원되지 않는 JWT 토큰입니다."),
     BAD_REQUEST_ILLEGAL_TOKEN(HttpStatus.BAD_REQUEST,400,"잘못된 JWT 토큰입니다."),
@@ -25,6 +27,7 @@ public enum ErrorStatus implements BaseCode {
     FORBIDDEN_ACCESS_CHANGE_ROLE(HttpStatus.FORBIDDEN, 403, "해당 워크스페이스의 관리자가 아닙니다."),
     CONFLICT_MEMBER(HttpStatus.BAD_REQUEST, 400, "해당 유저는 이미 초대된 멤버입니다."),
     BAD_REQUEST_NOT_MEMBER(HttpStatus.BAD_REQUEST,404,"추가하려는 유저는 해당 워크스페이스의 멤버가 아닙니다."),
+    BAD_REQUEST_INVALID_WORKSPACE_ID(HttpStatus.BAD_REQUEST,400,"워크스페이스 ID가 잘못 입력되었습니다."),
 
     // 보드 관련 예외
     NOT_FOUND_BOARD(HttpStatus.NOT_FOUND, 404, "해당 보드를 찾을 수 없습니다."),
@@ -53,6 +56,15 @@ public enum ErrorStatus implements BaseCode {
     NOT_FOUND_MEMBER(HttpStatus.NOT_FOUND,404,"해당 멤버를 찾을 수 없습니다."),
     FORBIDDEN_NOT_MANAGER(HttpStatus.FORBIDDEN,403,"현재 요청 멤버가 카드의 매니저가 아닙니다."),
     BAD_REQUEST_NOT_MANAGER(HttpStatus.BAD_REQUEST,400,"해당 멤버는 카드의 매니저가 아닙니다."),
+
+    //이메일 인증 관련 예외
+    FAIL_EMAIL_SENDING(HttpStatus.INTERNAL_SERVER_ERROR, 500, "이메일 전송에 실패했습니다."),
+    SEND_AUTH_EMAIL(HttpStatus.OK, 200, "메일이 전송되었습니다. 인증번호와 함께 다시 요청을 보내주십시오."),
+    FAIL_EMAIL_AUTHENTICATION(HttpStatus.FORBIDDEN, 403, "인증번호가 일치하지 않습니다."),
+    EMAIL_NOT_AVAILABLE(HttpStatus.BAD_REQUEST, 400, "이미 사용 중인 이메일입니다."),
+
+    // 인증 정보 관련 예외
+    NOT_FOUND_AUTHENTICATION(HttpStatus.FORBIDDEN, 403, "인증 정보를 찾을 수 없습니다."),
 
     // 슬랙 관련 예외
     UNAUTHORIZED_INVALID_STATE(HttpStatus.UNAUTHORIZED, 401, "유효하지 않은 State 입니다."),

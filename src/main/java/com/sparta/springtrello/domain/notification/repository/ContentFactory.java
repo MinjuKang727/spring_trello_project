@@ -6,6 +6,9 @@ import com.sparta.springtrello.domain.board.entity.Board;
 import com.sparta.springtrello.domain.board.repository.BoardRepository;
 import com.sparta.springtrello.domain.card.entity.Card;
 import com.sparta.springtrello.domain.card.repository.CardRepository;
+import com.sparta.springtrello.domain.card.util.CardFinder;
+import com.sparta.springtrello.domain.comment.entity.Comment;
+import com.sparta.springtrello.domain.comment.repository.CommentRepository;
 import com.sparta.springtrello.domain.deck.entity.Deck;
 import com.sparta.springtrello.domain.deck.repository.DeckRepository;
 import com.sparta.springtrello.domain.member.entity.Member;
@@ -48,6 +51,9 @@ public class ContentFactory {
         return null;
     }
 
+    @Lookup
+    private CommentRepository getCommentRepository() { return null; }
+
     public Object getContentRepository(NotificationCategory category) {
         return switch (category) {
             case WORKSPACE -> getWorkspaceRepository();
@@ -86,9 +92,15 @@ public class ContentFactory {
                     .orElseThrow(
                             () -> new ApiException(ErrorStatus.NOT_FOUND_MEMBER)
                     );
+            case COMMENT -> getCommentRepository()
+                    .findById(id)
+                    .orElseThrow(
+                            () -> new ApiException(ErrorStatus.NOT_FOUND_COMMENT)
+                    );
             default -> throw new ApiException(ErrorStatus.BAD_REQUEST_CONTENT_CATEGORY);
         };
     }
+
 
     public String getMessage(String message, NotificationCategory category, Object content) {
         sb.append(message);
@@ -99,13 +111,23 @@ public class ContentFactory {
             case DECK -> getDeckInfo((Deck) content);
             case CARD -> getCardInfo((Card) content);
             case MEMEBER -> getMemberInfo((Member) content);
+            case COMMENT -> getCommentInfo((Comment) content);
             default -> throw new ApiException(ErrorStatus.BAD_REQUEST_CONTENT_CATEGORY);
         };
     }
 
+    private String getCommentInfo(Comment content) {
+        sb.append("\n카드 이름 : ");
+        sb.append(content.getCard().getTitle());
+        sb.append("\n댓글 내용 :");
+        sb.append(content.getContents());
+        sb.append("\n작성일 :");
+        sb.append(content.getModifiedAt());
+
+        return sb.toString();
+    }
+
     private String getMemberInfo(Member member) {
-        sb.append("\n워크스페이스 이름 : ");
-        sb.append(member.getWorkspace().getName());
         sb.append("\n멤버 닉네임 : ");
         sb.append(member.getUser().getNickname());
         sb.append("  | 유저 권한 : ");
@@ -117,23 +139,13 @@ public class ContentFactory {
     }
 
     private String getCardInfo(Card card) {
-        sb.append("\n워크스페이스 이름 : ");
-        sb.append(card.getDeck().getBoard().getWorkspace().getName());
-        sb.append("  |  보드 이름 : ");
-        sb.append(card.getDeck().getBoard().getTitle());
-        sb.append("\n덱 이름 : ");
-        sb.append(card.getDeck().getName());
-        sb.append("  |  카드 이름 : ");
+        sb.append("\n카드 이름 : ");
         sb.append(card.getTitle());
 
         return sb.toString();
     }
 
     private String getDeckInfo(Deck deck) {
-        sb.append("\n워크스페이스 이름 : ");
-        sb.append(deck.getBoard().getWorkspace().getName());
-        sb.append("  |  보드 이름 : ");
-        sb.append(deck.getBoard().getTitle());
         sb.append("\n덱 이름 : ");
         sb.append(deck.getName());
 
@@ -141,9 +153,7 @@ public class ContentFactory {
     }
 
     private String getBoardInfo(Board board) {
-        sb.append("\n워크스페이스 이름 : ");
-        sb.append(board.getWorkspace().getName());
-        sb.append("  |  보드 이름 : ");
+        sb.append("\n보드 이름 : ");
         sb.append(board.getTitle());
 
         return sb.toString();

@@ -31,12 +31,12 @@ public class Workspace {
     private String description;
 
     @Column
-    private Boolean is_deleted = false;
+    private boolean isDeleted;
 
     private String slackChannelId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "admin_user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
@@ -65,7 +65,7 @@ public class Workspace {
     }
 
     public void deleteWorkspace() {
-        is_deleted = true;
+        isDeleted = true;
     }
 
     public void updateChannelId(String channelId) {

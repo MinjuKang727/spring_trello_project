@@ -12,7 +12,8 @@ public enum NotificationCategory {
     BOARD(Category.BOARD),
     DECK(Category.DECK),
     CARD(Category.CARD),
-    MEMEBER(Category.MEMBER);
+    MEMEBER(Category.MEMBER),
+    COMMENT(Category.COMMENT);
 
     private final String category;
 
@@ -29,6 +30,6 @@ public enum NotificationCategory {
         public static final String BOARD = "CATEGORY_BOARD";
         public static final String DECK = "CATEGORY_DECK";
         public static final String MEMBER = "CATEGORY_MEMBER";
-
+        public static final String COMMENT = "CATEGORY_COMMENT";
     }
 }

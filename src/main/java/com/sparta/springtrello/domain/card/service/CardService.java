@@ -1,10 +1,13 @@
 package com.sparta.springtrello.domain.card.service;
 
 import com.sparta.springtrello.domain.card.dto.request.CardCreateRequestDto;
+import com.sparta.springtrello.domain.card.dto.request.CardSearchRequestDto;
 import com.sparta.springtrello.domain.card.dto.request.CardUpdateRequestDto;
 import com.sparta.springtrello.domain.card.dto.response.CardCreateResponseDto;
+import com.sparta.springtrello.domain.card.dto.response.CardSearchResponseDto;
 import com.sparta.springtrello.domain.card.dto.response.CardUpdateResponseDto;
 import com.sparta.springtrello.domain.card.entity.Card;
+import com.sparta.springtrello.domain.card.repository.CardQueryDslRepository;
 import com.sparta.springtrello.domain.card.repository.CardRepository;
 import com.sparta.springtrello.domain.card.util.CardFinder;
 import com.sparta.springtrello.domain.deck.entity.Deck;
@@ -13,6 +16,9 @@ import com.sparta.springtrello.domain.manager.util.ManagerUtil;
 import com.sparta.springtrello.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -20,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CardService{
 
+    private final CardQueryDslRepository cardQueryDslRepository;
     private final CardRepository cardRepository;
     private final CardFinder cardFinder;
     private final DeckFinder deckFinder;
@@ -61,5 +68,25 @@ public class CardService{
                 savedCard.getTitle(),
                 savedCard.getContents(),
                 savedCard.getDeadline());
+    }
+
+    //카드 논리적 삭제
+    /*
+    1.현재 멤버가 카드의 매니저인지?
+     */
+    public String delete(Member requestedMember, Long cardId) {
+        Card card = cardFinder.findById(cardId);
+
+        managerUtil.validateCardManager(requestedMember,card);
+        card.delete();
+
+        return "삭제가 완료되었습니다.";
+    }
+
+    //카드 검색 페이지 처리 반환
+    public Page<CardSearchResponseDto> searchCards(CardSearchRequestDto requestDto) {
+        Pageable pageable = PageRequest.of(requestDto.getPage()-1, requestDto.getSize());
+
+        return cardQueryDslRepository.search(requestDto, pageable);
     }
 }

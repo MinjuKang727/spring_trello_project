@@ -1,6 +1,7 @@
 package com.sparta.springtrello.domain.comment.service;
 
 import com.sparta.springtrello.common.ErrorStatus;
+import com.sparta.springtrello.common.RedisUtil;
 import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.domain.card.entity.Card;
 import com.sparta.springtrello.domain.card.repository.CardRepository;
@@ -17,6 +18,9 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final CardRepository cardRepository;
+    private final RedisUtil redisUtil;
+
+    private static final String COMMENT_DELETE_KEY = "comment:";
 
     public CommentResponseDto createComment( Long cardId, CommentRequestDto commentRequestDto){
         //카드가 존재하는지 확인
@@ -40,6 +44,10 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new ApiException(ErrorStatus.NOT_FOUND_COMMENT));
         comment.delete();
         commentRepository.save(comment);
+
+        // redis에 1시간 저장 후 삭제
+        String redisKey = COMMENT_DELETE_KEY + commentId;
+        redisUtil.contentsDelete(redisKey, comment);
     }
 
     /**
