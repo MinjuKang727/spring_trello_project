@@ -54,7 +54,19 @@ public enum ErrorStatus implements BaseCode {
     FORBIDDEN_NOT_MANAGER(HttpStatus.FORBIDDEN,403,"현재 요청 멤버가 카드의 매니저가 아닙니다."),
     BAD_REQUEST_NOT_MANAGER(HttpStatus.BAD_REQUEST,400,"해당 멤버는 카드의 매니저가 아닙니다."),
 
+    // 슬랙 관련 예외
+    UNAUTHORIZED_INVALID_STATE(HttpStatus.UNAUTHORIZED, 401, "유효하지 않은 State 입니다."),
+    SLACK_ACCESSTOKEN_REQUEST_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 500, "엑세스 토큰 요청 중, 문제가 발생하였습니다."),
+    SLACK_FETCH_USER_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 500, "유저 목록을 가져오던 중, 문제가 발생하였습니다."),
+    SLACK_SEND_MESSAGE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 500, "슬랙 메시지 전송 실패"),
+    BAD_REQUEST_CONTENT_CATEGORY(HttpStatus.BAD_REQUEST, 400, "유효하지 않은 컨텐츠 카테고리입니다."),
+    NOT_SLACK_USER(HttpStatus.BAD_REQUEST, 400, "슬랙 유저 정보가 존재하지 않아 알람을 보낼 수 없습니다."),
+    SLACK_CREATE_CHANNEL_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 500, "워크스페이스 알람용 채널 생성에 실패하였습니다."),
+    SLACK_INVITE_MEMBER_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 500, "슬랙 채널 초대 실패"),
+    SLACK_DM_CHANNEL_CONNECTION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 500, "슬랙 DM 채널 연결 실패"),
+
     TEST_ERROR(HttpStatus.BAD_REQUEST, 400, "ApiException 예외 처리 테스트");
+
 
 
     private final HttpStatus httpStatus;
