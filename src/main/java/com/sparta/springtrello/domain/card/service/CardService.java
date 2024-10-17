@@ -92,10 +92,10 @@ public class CardService{
 
     //카드 단건 상세조회
     public CardDetailsResponseDto getCardDetails(Long cardId) {
+        Card card = cardFinder.findById(cardId);
+        card.viewedDetails();
+        cardRespository.save(card);
         CardDetailsResponseDto response = cardQueryDslRepository.getCardDetails(cardId);
-        if(response == null) {
-            throw new ApiException(ErrorStatus.NOT_FOUND_CARD);
-        }
         return response;
     }
 

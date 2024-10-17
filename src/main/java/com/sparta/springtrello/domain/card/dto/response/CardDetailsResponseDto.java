@@ -15,4 +15,5 @@ public class CardDetailsResponseDto {
     private String attachment;
     private Long managerCount;
     private Long commentCount;
+    private Long views;
 }

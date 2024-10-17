@@ -29,6 +29,7 @@ public class Card  extends Timestamped {
     private Date deadline;
     @Column(name = "is_deleted")
     private boolean isDeleted = false;
+    private Long views = 0L;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deck_id")
@@ -63,5 +64,9 @@ public class Card  extends Timestamped {
 
     public void setAttachmentUrl(String attachmentUrl) {
         this.attachment = attachmentUrl;
+    }
+
+    public void viewedDetails() {
+        this.views++;
     }
 }

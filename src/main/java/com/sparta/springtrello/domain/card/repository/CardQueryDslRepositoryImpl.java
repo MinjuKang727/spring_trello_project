@@ -80,7 +80,8 @@ public class CardQueryDslRepositoryImpl implements CardQueryDslRepository {
                                 card.deadline.as("deadline"),
                                 card.attachment.as("attachment"),
                                 manager.id.count().as("managerCount"),
-                                comment.id.count().as("commentCount")
+                                comment.id.count().as("commentCount"),
+                                card.views.as("views")
                         ))
                 .from(card)
                 .leftJoin(manager).on(manager.card.id.eq(card.id))
