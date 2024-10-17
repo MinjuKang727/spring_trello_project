@@ -1,6 +1,7 @@
 package com.sparta.springtrello.domain.card.service;
 
 import com.sparta.springtrello.common.ErrorStatus;
+import com.sparta.springtrello.common.RedisUtil;
 import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.domain.card.dto.request.CardCreateRequestDto;
 import com.sparta.springtrello.domain.card.dto.request.CardSearchRequestDto;
@@ -15,6 +16,8 @@ import com.sparta.springtrello.domain.deck.util.DeckFinder;
 import com.sparta.springtrello.domain.manager.util.ManagerUtil;
 import com.sparta.springtrello.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +34,7 @@ public class CardService{
     private final CardFinder cardFinder;
     private final DeckFinder deckFinder;
     private final ManagerUtil managerUtil;
+    private final RedisUtil redisUtil;
 
     //카드 생성
     public CardCreateResponseDto create(Long deckId,
@@ -53,6 +57,7 @@ public class CardService{
     }
 
     //카드 수정
+    @CacheEvict(value = "cardDetails", key = "#cardId")
     public CardUpdateResponseDto update(Member requestedMember,
                                         Long cardId,
                                         CardUpdateRequestDto requestDto) {
@@ -74,6 +79,7 @@ public class CardService{
     /*
     1.현재 멤버가 카드의 매니저인지?
      */
+    @CacheEvict(value = "cardDetails", key = "#cardId")
     public String delete(Member requestedMember, Long cardId) {
         Card card = cardFinder.findById(cardId);
 
@@ -90,16 +96,28 @@ public class CardService{
         return cardQueryDslRepository.search(requestDto, pageable);
     }
 
-    //카드 단건 상세조회
+    // 카드 단건 상세 조회
     public CardDetailsResponseDto getCardDetails(Long cardId) {
-        Card card = cardFinder.findById(cardId);
-        card.viewedDetails();
-        cardRespository.save(card);
-        CardDetailsResponseDto response = cardQueryDslRepository.getCardDetails(cardId);
+        // 조회수를 캐시에 상관없이 증가시킵니다.
+        redisUtil.incrementViews(cardId);
+
+        // 카드 상세 정보 조회
+        CardDetailsResponseDto response = detailsTest(cardId);
+
+        // Redis에서 현재 조회수를 가져와서 설정
+        Long viewCount = redisUtil.getViews(cardId);
+        response.setViews(viewCount);
+
         return response;
     }
 
+    @Cacheable(value = "cardDetails", key = "#cardId")
+    public CardDetailsResponseDto detailsTest(Long cardId) {
+        return cardQueryDslRepository.getCardDetails(cardId);
+    }
+
     //카드 덱 이동
+    @CacheEvict(value = "cardDetails", key = "#cardId")
     public CardDeckMoveResponseDto moveCardToAnotherDeck(Long cardId, Long afterDeckId) {
         /*
         이동할 덱이 현재 덱과 다른지, 이동할 덱이 있기는 한지
@@ -116,4 +134,7 @@ public class CardService{
         cardRespository.save(card);
         return new CardDeckMoveResponseDto(cardId, beforeDeckId ,afterDeckId);
     }
+
+    //카드 랭킹 조회
+
 }

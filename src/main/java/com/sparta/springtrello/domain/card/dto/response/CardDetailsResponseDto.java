@@ -16,4 +16,8 @@ public class CardDetailsResponseDto {
     private Long managerCount;
     private Long commentCount;
     private Long views;
+
+    public void setViews(Long views) {
+        this.views = views;
+    }
 }

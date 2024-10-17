@@ -4,6 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sparta.springtrello.common.RedisUtil;
 import com.sparta.springtrello.domain.card.dto.request.CardSearchRequestDto;
 import com.sparta.springtrello.domain.card.dto.response.CardDetailsResponseDto;
 import com.sparta.springtrello.domain.card.dto.response.CardSearchResponseDto;
@@ -24,6 +25,7 @@ import static com.sparta.springtrello.domain.manager.entity.QManager.manager;
 @RequiredArgsConstructor
 public class CardQueryDslRepositoryImpl implements CardQueryDslRepository {
     private final JPAQueryFactory jpaQueryFactory;
+    private final RedisUtil redisUtil;
 
     @Override
     public Page<CardSearchResponseDto> search(CardSearchRequestDto requestDto, Pageable pageable) {
@@ -80,8 +82,7 @@ public class CardQueryDslRepositoryImpl implements CardQueryDslRepository {
                                 card.deadline.as("deadline"),
                                 card.attachment.as("attachment"),
                                 manager.id.count().as("managerCount"),
-                                comment.id.count().as("commentCount"),
-                                card.views.as("views")
+                                comment.id.count().as("commentCount")
                         ))
                 .from(card)
                 .leftJoin(manager).on(manager.card.id.eq(card.id))
