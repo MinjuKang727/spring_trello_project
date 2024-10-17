@@ -102,5 +102,16 @@ public class CardController {
         return ResponseEntity.ok(ApiResponse.onSuccess(cardService.getCardDetails(cardId)));
     }
 
+    //카드 덱 이동
+    @PutMapping("/cards/{cardId}/moving")
+    public ResponseEntity<ApiResponse<CardDeckMoveResponseDto>> moveCardDeck(@PathVariable Long workspaceId,
+                                                                             @PathVariable Long boardId,
+                                                                             @PathVariable Long deckId,
+                                                                             @PathVariable Long cardId,
+                                                                             @RequestParam Long afterDeckId) {
+        return ResponseEntity.ok(ApiResponse.onSuccess(cardService.moveCardToAnotherDeck(cardId,afterDeckId)));
+    }
+
+
 }
 

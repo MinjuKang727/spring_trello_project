@@ -39,6 +39,7 @@ public enum ErrorStatus implements BaseCode {
     FORBIDDEN_READ_ONLY(HttpStatus.FORBIDDEN,403,"현재 권한이 읽기 전용입니다."),
     NOT_FOUND_CARD(HttpStatus.NOT_FOUND,404,"해당 카드를 찾을 수 없습니다."),
     NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, 404, "해당 댓글을 찾을 수 없습니다."),
+    BAD_REQUEST_ALREADY_IN_DECK(HttpStatus.BAD_REQUEST,400,"이미 해당 덱에 카드가 존재합니다."),
 
     //파일 관련 예외
     INTERNAL_SERVER_ERROR_FAILED_CONVERT_FILE(HttpStatus.INTERNAL_SERVER_ERROR, 500, "파일 변환에 문제가 생겼습니다."),
