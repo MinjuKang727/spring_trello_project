@@ -5,10 +5,7 @@ import com.sparta.springtrello.common.RedisUtil;
 import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.common.exception.AuthException;
 import com.sparta.springtrello.config.JwtUtil;
-import com.sparta.springtrello.domain.auth.dto.SigninRequestDto;
-import com.sparta.springtrello.domain.auth.dto.SigninResponseDto;
-import com.sparta.springtrello.domain.auth.dto.SignupRequestDto;
-import com.sparta.springtrello.domain.auth.dto.SignupResponseDto;
+import com.sparta.springtrello.domain.auth.dto.*;
 import com.sparta.springtrello.domain.user.entity.User;
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import com.sparta.springtrello.domain.user.repository.UserRepository;
@@ -117,5 +114,9 @@ public class AuthService {
         }
 
         return redisKey;
+    }
+
+    public static User fromAuthUser(AuthUser authUser) {
+        return new User(authUser.getId(), authUser.getEmail(), authUser.getUserRole());
     }
 }

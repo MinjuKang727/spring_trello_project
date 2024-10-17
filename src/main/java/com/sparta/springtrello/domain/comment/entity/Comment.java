@@ -3,7 +3,6 @@ package com.sparta.springtrello.domain.comment.entity;
 import com.sparta.springtrello.common.Timestamped;
 import com.sparta.springtrello.domain.card.entity.Card;
 import com.sparta.springtrello.domain.member.entity.Member;
-import com.sparta.springtrello.domain.workspace.entity.Workspace;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -29,6 +29,7 @@ public enum ErrorStatus implements BaseCode {
     FORBIDDEN_ACCESS_CHANGE_ROLE(HttpStatus.FORBIDDEN, 403, "해당 워크스페이스의 관리자가 아닙니다."),
     CONFLICT_MEMBER(HttpStatus.BAD_REQUEST, 400, "해당 유저는 이미 초대된 멤버입니다."),
     BAD_REQUEST_NOT_MEMBER(HttpStatus.BAD_REQUEST,404,"추가하려는 유저는 해당 워크스페이스의 멤버가 아닙니다."),
+    BAD_REQUEST_INVALID_WORKSPACE_ID(HttpStatus.BAD_REQUEST,400,"워크스페이스 ID가 잘못 입력되었습니다."),
 
     // 보드 관련 예외
     NOT_FOUND_BOARD(HttpStatus.NOT_FOUND, 404, "해당 보드를 찾을 수 없습니다."),
@@ -50,7 +51,8 @@ public enum ErrorStatus implements BaseCode {
 
     //매니저 관련 예외
     NOT_FOUND_MANAGER(HttpStatus.NOT_FOUND,404,"해당 매니저를 찾을 수 없습니다."),
-
+    BAD_REQUEST_INVALID_CARD_OR_MEMBER(HttpStatus.BAD_REQUEST,400,"카드ID나 멤버ID가 유효하지 않습니다."),
+    BAD_REQUEST_ALREADY_MANAGER(HttpStatus.BAD_REQUEST,400,"해당 유저는 이미 해당 카드의 매니저입니다."),
 
     //멤버 관련 예외
     NOT_FOUND_MEMBER(HttpStatus.NOT_FOUND,404,"해당 멤버를 찾을 수 없습니다."),
