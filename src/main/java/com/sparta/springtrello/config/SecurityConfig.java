@@ -36,9 +36,10 @@ public class SecurityConfig {
                 )
                 .addFilterBefore(jwtSecurityFilter, SecurityContextHolderAwareRequestFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
+//                        .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/test", "/admin/**").hasAuthority(UserRole.Authority.ADMIN)
                         .requestMatchers("/**").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated() // 그 외의 API는 JWT가 있어야해요!
                 )
                 .build();
