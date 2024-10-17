@@ -63,16 +63,23 @@ public class CardAttachmentService {
                 () -> new ApiException(ErrorStatus.INTERNAL_SERVER_ERROR_FAILED_CONVERT_FILE)
         );
 
-        //파일 경로를 String으로 반환
+        //파일 경로를 String 반환
         return convertFile.getAbsolutePath();
     }
 
     // 파일 convert 후 로컬에 업로드
     private Optional<File> convert(MultipartFile file) throws IOException {
         String uuidFilename = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        String uploadDir = System.getProperty("user.dir") + "/upload/";
 
-        File convertFile = new File(System.getProperty("user.dir") + "/upload/" + uuidFilename);
-        if (convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
+        // 해당 폴더가 존재하지 않으면 생성
+        File directory = new File(uploadDir);
+        if (!directory.exists()) {
+            directory.mkdirs(); // 경로에 디렉터리가 없으면 모든 상위 디렉터리도 포함해서 생성
+        }
+
+        File convertFile = new File(uploadDir + uuidFilename);
+        if (convertFile.createNewFile()) { // 지정한 경로에 파일이 생성됨 (경로가 잘못되었다면 생성 불가능)
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
                 fos.write(file.getBytes());
             }

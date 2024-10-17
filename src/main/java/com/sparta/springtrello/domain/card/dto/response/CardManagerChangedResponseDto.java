@@ -2,8 +2,6 @@ package com.sparta.springtrello.domain.card.dto.response;
 
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
 public class CardManagerChangedResponseDto {
     private final Long cardId;
