@@ -35,8 +35,8 @@ public class User extends Timestamped {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-    @ColumnDefault("false")
     private boolean isDeleted;
+
     @Column(length = 20)
     private Long kakaoId;
     private String slackId;
