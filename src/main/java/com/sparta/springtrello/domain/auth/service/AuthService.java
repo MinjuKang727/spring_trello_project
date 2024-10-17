@@ -82,14 +82,14 @@ public class AuthService {
     // 로그인
     public SigninResponseDto signin(SigninRequestDto request) {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() ->
-                new IllegalArgumentException("가입되지 않은 유저입니다."));
+                new ApiException(ErrorStatus.NOT_FOUND_USER));
 
         if(user.isDeleted()) {
-            throw new IllegalArgumentException("탈퇴한 유저입니다.");
+            throw new ApiException(ErrorStatus.BAD_REQUEST_WITHDRAW);
         }
 
         if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new AuthException("잘못된 비밀번호입니다.");
+            throw new ApiException(ErrorStatus.NOT_MATCH_PASSWORD);
         }
 
         String bearerToken = jwtUtil.createToken(user.getId(), user.getEmail(), user.getUserRole());

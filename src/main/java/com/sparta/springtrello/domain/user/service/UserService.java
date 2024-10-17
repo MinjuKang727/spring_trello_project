@@ -1,7 +1,9 @@
 package com.sparta.springtrello.domain.user.service;
 
+import com.sparta.springtrello.common.ErrorStatus;
 import com.sparta.springtrello.common.GlobalUtil;
 import com.sparta.springtrello.common.RedisUtil;
+import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.config.JwtUtil;
 import com.sparta.springtrello.domain.auth.dto.AuthUser;
 import com.sparta.springtrello.domain.user.dto.UserDeleteRequestDto;
@@ -35,10 +37,10 @@ public class UserService {
         String redisKey = WITHDRAW_KEY + authUser.getEmail();
 
         User user = userRepository.findByEmail(authUser.getEmail()).orElseThrow(() ->
-            new IllegalArgumentException("유저를 찾을 수 없습니다."));
+            new ApiException(ErrorStatus.NOT_FOUND_USER));
 
         if(!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new ApiException(ErrorStatus.NOT_MATCH_PASSWORD);
         }
 
         user.delete();
