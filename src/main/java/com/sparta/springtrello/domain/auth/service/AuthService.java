@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.regex.Pattern;
-
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -77,5 +75,9 @@ public class AuthService {
         String bearerToken = jwtUtil.createToken(user.getId(), user.getEmail(), user.getUserRole());
 
         return new SigninResponseDto(bearerToken);
+    }
+
+    public static User fromAuthUser(AuthUser authUser) {
+        return new User(authUser.getId(), authUser.getEmail(), authUser.getUserRole());
     }
 }

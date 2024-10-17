@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public class CardAttachmentResponseDto {
-    private Long cardId;
-    private String title;
-    private String fileUrl;
+    private final Long cardId;
+    private final String title;
+    private final String fileUrl;
 
     public CardAttachmentResponseDto(Long cardId,String title, String fileUrl) {
         this.cardId = cardId;

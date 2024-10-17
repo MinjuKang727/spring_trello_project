@@ -5,7 +5,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.Nullable;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,7 +39,7 @@ public class JwtUtil {
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .claim("id", id)
+                        .setSubject(String.valueOf(id))
                         .claim("email", email)
                         .claim("userRole", userRole)
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME))

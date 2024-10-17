@@ -1,6 +1,5 @@
 package com.sparta.springtrello.domain.card.dto.response;
 
-import com.sparta.springtrello.domain.card.entity.Card;
 import lombok.Getter;
 
 @Getter

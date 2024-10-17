@@ -1,7 +1,6 @@
 package com.sparta.springtrello.domain.card.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.sparta.springtrello.domain.card.entity.Card;
 import lombok.Getter;
 
 import java.sql.Date;

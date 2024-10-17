@@ -1,6 +1,5 @@
 package com.sparta.springtrello.domain.board.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
     @Getter
