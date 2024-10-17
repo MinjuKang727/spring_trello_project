@@ -9,7 +9,4 @@ import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findByWorkspaceId(Long workspacesId);
-
-    @Query("SELECT FROM JOIN WHERE")
-    Optional<Board> findAllInfoById(Long id);
 }

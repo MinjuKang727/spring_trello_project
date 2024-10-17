@@ -86,7 +86,7 @@ public class BoardService {
     public void deleteBoard(Long boardId) {
 
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new ApiException(ErrorStatus.NOT_FOUND_BOARD));
-        board.delete();
+        board.deleted();
         boardRepository.save(board);
 
         // redis에 1시간 저장 후 삭제

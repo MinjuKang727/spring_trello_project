@@ -50,12 +50,15 @@ public enum ErrorStatus implements BaseCode {
 
     //매니저 관련 예외
     NOT_FOUND_MANAGER(HttpStatus.NOT_FOUND,404,"해당 매니저를 찾을 수 없습니다."),
+    BAD_REQUEST_ALREADY_MANAGER(HttpStatus.BAD_REQUEST, 400, "해당 유저는 이미 매니저입니다."),
 
 
     //멤버 관련 예외
     NOT_FOUND_MEMBER(HttpStatus.NOT_FOUND,404,"해당 멤버를 찾을 수 없습니다."),
     FORBIDDEN_NOT_MANAGER(HttpStatus.FORBIDDEN,403,"현재 요청 멤버가 카드의 매니저가 아닙니다."),
     BAD_REQUEST_NOT_MANAGER(HttpStatus.BAD_REQUEST,400,"해당 멤버는 카드의 매니저가 아닙니다."),
+    BAD_REQUEST_INVALID_CARD_OR_MEMBER(HttpStatus.BAD_REQUEST, 400, "유효하지 않은 카드 혹은 멤버 정보입니다."),
+
 
     //이메일 인증 관련 예외
     FAIL_EMAIL_SENDING(HttpStatus.INTERNAL_SERVER_ERROR, 500, "이메일 전송에 실패했습니다."),
