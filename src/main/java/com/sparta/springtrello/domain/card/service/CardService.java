@@ -4,6 +4,7 @@ import com.sparta.springtrello.domain.card.dto.request.CardCreateRequestDto;
 import com.sparta.springtrello.domain.card.dto.request.CardSearchRequestDto;
 import com.sparta.springtrello.domain.card.dto.request.CardUpdateRequestDto;
 import com.sparta.springtrello.domain.card.dto.response.CardCreateResponseDto;
+import com.sparta.springtrello.domain.card.dto.response.CardDetailsResponseDto;
 import com.sparta.springtrello.domain.card.dto.response.CardSearchResponseDto;
 import com.sparta.springtrello.domain.card.dto.response.CardUpdateResponseDto;
 import com.sparta.springtrello.domain.card.entity.Card;
@@ -88,5 +89,10 @@ public class CardService{
         Pageable pageable = PageRequest.of(requestDto.getPage()-1, requestDto.getSize());
 
         return cardQueryDslRepository.search(requestDto, pageable);
+    }
+
+    //카드 단건 상세조회
+    public CardDetailsResponseDto getCardDetails(Long cardId) {
+        return cardQueryDslRepository.getCardDetails(cardId);
     }
 }

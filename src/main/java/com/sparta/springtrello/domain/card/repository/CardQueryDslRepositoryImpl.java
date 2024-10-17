@@ -5,6 +5,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.springtrello.domain.card.dto.request.CardSearchRequestDto;
+import com.sparta.springtrello.domain.card.dto.response.CardDetailsResponseDto;
 import com.sparta.springtrello.domain.card.dto.response.CardSearchResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import java.sql.Date;
 import java.util.List;
 
 import static com.sparta.springtrello.domain.card.entity.QCard.card;
+import static com.sparta.springtrello.domain.comment.entity.QComment.comment;
 import static com.sparta.springtrello.domain.manager.entity.QManager.manager;
 
 @Repository
@@ -60,6 +62,33 @@ public class CardQueryDslRepositoryImpl implements CardQueryDslRepository {
                 .fetchOne();
 
         return new PageImpl<>(results, pageable, totalCount);
+    }
+
+    @Override
+    public CardDetailsResponseDto getCardDetails(Long cardId) {
+        return jpaQueryFactory
+                .select(
+                        Projections.fields(
+                                CardDetailsResponseDto.class,
+                                card.id.as("cardId"),
+                                card.title.as("title"),
+                                card.contents.as("contents"),
+                                card.deadline.as("deadline"),
+                                card.attachment.as("attachment"),
+                                manager.id.count().as("managerCount"),
+                                comment.id.count().as("commentCount")
+                        ))
+                .from(card)
+                .leftJoin(manager).on(manager.card.id.eq(card.id))
+                .leftJoin(comment).on(comment.card.id.eq(card.id))
+                .where(cardIdEq(cardId)
+                        .and(cardNotDeleted()))
+                .groupBy(card.id)
+                .fetchOne();
+    }
+
+    private BooleanExpression cardIdEq(Long cardId) {
+        return card.id.eq(cardId);
     }
 
     private BooleanExpression titleContains(String title) {
