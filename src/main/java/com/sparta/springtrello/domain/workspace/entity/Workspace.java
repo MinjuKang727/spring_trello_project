@@ -31,7 +31,7 @@ public class Workspace {
     private String description;
 
     @Column
-    private Boolean isDeleted;
+    private boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

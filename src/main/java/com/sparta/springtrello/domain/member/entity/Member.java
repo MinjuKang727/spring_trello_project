@@ -40,6 +40,13 @@ public class Member {
         this.workspace = workspace;
     }
 
+    public Member(User user, Workspace workspace, InvitationStatus invitationStatus, MemberRole memberRole) {
+        this.user = user;
+        this.workspace = workspace;
+        this.invitationStatus = invitationStatus;
+        this.memberRole = memberRole;
+    }
+
     public void updateInvitationStatus(InvitationStatus invitationStatus) {
         this.invitationStatus = invitationStatus;
     }
