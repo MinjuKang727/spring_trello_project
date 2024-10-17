@@ -61,7 +61,7 @@ public enum ErrorStatus implements BaseCode {
     FAIL_EMAIL_SENDING(HttpStatus.INTERNAL_SERVER_ERROR, 500, "이메일 전송에 실패했습니다."),
     SEND_AUTH_EMAIL(HttpStatus.OK, 200, "메일이 전송되었습니다. 인증번호와 함께 다시 요청을 보내주십시오."),
     FAIL_EMAIL_AUTHENTICATION(HttpStatus.FORBIDDEN, 403, "인증번호가 일치하지 않습니다."),
-    EMAIL_NOT_AVAILABLE(HttpStatus.FORBIDDEN, 400, "이미 사용 중인 이메일입니다."),
+    EMAIL_NOT_AVAILABLE(HttpStatus.BAD_REQUEST, 400, "이미 사용 중인 이메일입니다."),
 
     // 인증 정보 관련 예외
     NOT_FOUND_AUTHENTICATION(HttpStatus.FORBIDDEN, 403, "인증 정보를 찾을 수 없습니다."),
