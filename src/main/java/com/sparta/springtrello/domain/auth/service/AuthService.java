@@ -104,8 +104,4 @@ public class AuthService {
 
         return Pattern.matches(passwordPattern, password);
     }
-
-    public static User fromAuthUser(AuthUser authUser) {
-        return new User(authUser.getId(), authUser.getEmail(), authUser.getUserRole());
-    }
 }

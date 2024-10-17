@@ -9,7 +9,10 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public enum NotificationCategory {
     WORKSPACE(Category.WORKSPACE),
-    CARD(Category.CARD);
+    BOARD(Category.BOARD),
+    DECK(Category.DECK),
+    CARD(Category.CARD),
+    MEMEBER(Category.MEMBER);
 
     private final String category;
 
@@ -23,5 +26,9 @@ public enum NotificationCategory {
     public static class Category {
         public static final String WORKSPACE = "CATEGORY_WORKSPACE";
         public static final String CARD = "CATEGORY_CARD";
+        public static final String BOARD = "CATEGORY_BOARD";
+        public static final String DECK = "CATEGORY_DECK";
+        public static final String MEMBER = "CATEGORY_MEMBER";
+
     }
 }

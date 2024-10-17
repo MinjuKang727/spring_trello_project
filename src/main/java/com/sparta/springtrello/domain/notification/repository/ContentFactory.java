@@ -82,7 +82,7 @@ public class ContentFactory {
                             () -> new ApiException(ErrorStatus.NOT_FOUND_CARD)
                     );
             case MEMEBER -> getMemberRepository()
-                    .findById(id)
+                    .findJoinMemberById(id)
                     .orElseThrow(
                             () -> new ApiException(ErrorStatus.NOT_FOUND_MEMBER)
                     );

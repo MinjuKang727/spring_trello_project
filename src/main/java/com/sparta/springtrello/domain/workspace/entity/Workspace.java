@@ -33,6 +33,8 @@ public class Workspace {
     @Column
     private Boolean is_deleted = false;
 
+    private String slackChannelId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_user_id", nullable = false)
     private User user;
@@ -66,4 +68,7 @@ public class Workspace {
         is_deleted = true;
     }
 
+    public void updateChannelId(String channelId) {
+        this.slackChannelId = channelId;
+    }
 }

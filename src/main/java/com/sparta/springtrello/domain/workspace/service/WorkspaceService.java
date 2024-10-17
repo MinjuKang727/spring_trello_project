@@ -40,7 +40,6 @@ public class WorkspaceService {
                 savedWorkspace.getName(),
                 savedWorkspace.getDescription()
         );
-
     }
 
     public WorkspaceResponseDto getWorkspace(AuthUser authUser, Long workspaceId) {

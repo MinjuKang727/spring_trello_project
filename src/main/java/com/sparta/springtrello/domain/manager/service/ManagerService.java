@@ -4,7 +4,7 @@ import com.sparta.springtrello.common.ErrorStatus;
 import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.domain.card.dto.response.CardManagerChangedResponseDto;
 import com.sparta.springtrello.domain.card.entity.Card;
-import com.sparta.springtrello.domain.card.repository.CardRespository;
+import com.sparta.springtrello.domain.card.repository.CardRepository;
 import com.sparta.springtrello.domain.card.util.CardFinder;
 import com.sparta.springtrello.domain.manager.entity.Manager;
 import com.sparta.springtrello.domain.manager.repository.ManagerRepository;
@@ -20,7 +20,7 @@ public class ManagerService {
     private final ManagerRepository managerRepository;
     private final MemberRepository memberRepository;
     private final CardFinder cardFinder;
-    private final CardRespository cardRespository;
+    private final CardRepository cardRepository;
     private final ManagerUtil managerUtil;
 
     //담당자 추가
@@ -76,7 +76,7 @@ public class ManagerService {
 
         foundManager.delete(card);
         managerRepository.save(foundManager);
-        cardRespository.save(card);
+        cardRepository.save(card);
         return new CardManagerChangedResponseDto(cardId,
                 card.getTitle(),
                 foundManager.getMember().getUser().getId(),
