@@ -1,6 +1,7 @@
 package com.sparta.springtrello.domain.card.controller;
 
 import com.sparta.springtrello.annotation.RequestedMember;
+import com.sparta.springtrello.annotation.WorkspaceAccessAuthorize;
 import com.sparta.springtrello.annotation.WorkspaceAccessButReadOnlyAuthorize;
 import com.sparta.springtrello.common.ApiResponse;
 import com.sparta.springtrello.domain.card.dto.request.CardCreateRequestDto;
@@ -61,6 +62,7 @@ public class CardController {
     }
 
     //카드에 파일 첨부
+    @WorkspaceAccessButReadOnlyAuthorize
     @PostMapping("/workspaces/{workspaceId}/boards/{boardId}/decks/{deckId}/{cardId}")
     public ResponseEntity<ApiResponse<CardAttachmentResponseDto>> attachFileToFile(@PathVariable Long workspaceId,
                                                                       @PathVariable Long boardId,
@@ -72,6 +74,7 @@ public class CardController {
     }
 
     //카드 삭제
+    @WorkspaceAccessButReadOnlyAuthorize
     @DeleteMapping("/workspaces/{workspaceId}/boards/{boardId}/decks/{deckId}/{cardId}")
     public ResponseEntity<ApiResponse<String>> delete(@PathVariable Long workspaceId,
                                                       @PathVariable Long boardId,
@@ -82,6 +85,7 @@ public class CardController {
     }
 
     //카드 검색
+    @WorkspaceAccessAuthorize
     @GetMapping("/workspaces/{workspaceId}/boards/{boardId}/decks/{deckId}/cards/search")
     public ResponseEntity<ApiResponse<Page<CardSearchResponseDto>>> search(@PathVariable Long workspaceId,
                                                                            @PathVariable Long boardId,

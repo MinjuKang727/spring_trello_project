@@ -1,4 +1,4 @@
-package com.sparta.springtrello.domain.card.dto.response;
+package com.sparta.springtrello.domain.manager.dto.response;
 
 import lombok.Getter;
 
