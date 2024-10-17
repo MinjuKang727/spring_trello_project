@@ -12,6 +12,4 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
 
     List<Workspace> findAllByUser(User user);
 
-    @Query("SELECT w FROM Workspace w WHERE w.is_deleted = :isDeleted")
-    List<Workspace> findAllByIsDeleted(boolean isDeleted);
 }

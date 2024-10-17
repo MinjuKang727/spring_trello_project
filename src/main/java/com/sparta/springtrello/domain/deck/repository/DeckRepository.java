@@ -20,6 +20,4 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
     @Query("SELECT d FROM Deck d WHERE d.board.id = :boardId ORDER BY d.order ASC")
     List<Deck> findAllByBoardId(Long boardId);
 
-    @Query("SELECT d FROM Deck d WHERE d.isDeleted = :isDeleted")
-    List<Deck> findAllByIsDeleted(boolean isDeleted);
 }

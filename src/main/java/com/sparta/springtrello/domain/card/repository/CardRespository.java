@@ -10,6 +10,4 @@ import java.util.List;
 
 @Repository
 public interface CardRespository extends JpaRepository<Card,Long> {
-    @Query("SELECT c FROM Card c WHERE c.isDeleted = :isDeleted")
-    List<Card> findAllByIsDeleted(boolean isDeleted);
 }
