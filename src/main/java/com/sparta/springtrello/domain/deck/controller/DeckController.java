@@ -27,7 +27,7 @@ public class DeckController {
      * @param deckName : 생성할 덱 이름
      * @return ApiResponse : message - "덱 생성 성공"/ Status Code - 200 / date - 생성된 덱 정보를 바인딩한 DeckResponse 객체
      */
-    @PostMapping("/workspaces/{workspaceId}/boards/{boadId}/decks")
+    @PostMapping("/workspaces/{workspaceId}/boards/{boardId}/decks")
     public ResponseEntity<ApiResponse<DeckCreateResponse>> createDeck(
             @PathVariable(name = "boardId") Long boardId,
             @RequestBody @NotBlank String deckName
