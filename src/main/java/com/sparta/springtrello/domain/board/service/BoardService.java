@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BoardService {
 
-    private BoardRepository boardRepository;
-    private WorkspaceRepository workspaceRepository;
+    private final WorkspaceRepository workspaceRepository;
+    private final BoardRepository boardRepository;
     private final RedisUtil redisUtil;
 
     private static final String BOARD_DELETE_KEY = "board:";

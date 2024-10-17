@@ -1,11 +1,11 @@
 package com.sparta.springtrello.domain.card.service;
 
+import com.sparta.springtrello.common.ErrorStatus;
+import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.domain.card.dto.request.CardCreateRequestDto;
 import com.sparta.springtrello.domain.card.dto.request.CardSearchRequestDto;
 import com.sparta.springtrello.domain.card.dto.request.CardUpdateRequestDto;
-import com.sparta.springtrello.domain.card.dto.response.CardCreateResponseDto;
-import com.sparta.springtrello.domain.card.dto.response.CardSearchResponseDto;
-import com.sparta.springtrello.domain.card.dto.response.CardUpdateResponseDto;
+import com.sparta.springtrello.domain.card.dto.response.*;
 import com.sparta.springtrello.domain.card.entity.Card;
 import com.sparta.springtrello.domain.card.repository.CardQueryDslRepository;
 import com.sparta.springtrello.domain.card.repository.CardRespository;
@@ -40,7 +40,7 @@ public class CardService{
 
         //덱에 카드 등록
         Deck deck = deckFinder.findById(deckId);
-        card.setDeck(deck);
+        card.assignCard(deck);
 
         //카드 담당자 등록
         managerUtil.createManager(card, requestedMember);
@@ -88,5 +88,32 @@ public class CardService{
         Pageable pageable = PageRequest.of(requestDto.getPage()-1, requestDto.getSize());
 
         return cardQueryDslRepository.search(requestDto, pageable);
+    }
+
+    //카드 단건 상세조회
+    public CardDetailsResponseDto getCardDetails(Long cardId) {
+        CardDetailsResponseDto response = cardQueryDslRepository.getCardDetails(cardId);
+        if(response == null) {
+            throw new ApiException(ErrorStatus.NOT_FOUND_CARD);
+        }
+        return response;
+    }
+
+    //카드 덱 이동
+    public CardDeckMoveResponseDto moveCardToAnotherDeck(Long cardId, Long afterDeckId) {
+        /*
+        이동할 덱이 현재 덱과 다른지, 이동할 덱이 있기는 한지
+         */
+        Card card = cardFinder.findById(cardId);
+        Long beforeDeckId = card.getDeck().getId();
+
+        if(beforeDeckId.equals(afterDeckId)) {
+            throw new ApiException(ErrorStatus.BAD_REQUEST_ALREADY_IN_DECK);
+        }
+
+        Deck afterDeck = deckFinder.findById(afterDeckId);
+        card.assignCard(afterDeck);
+        cardRespository.save(card);
+        return new CardDeckMoveResponseDto(cardId, beforeDeckId ,afterDeckId);
     }
 }

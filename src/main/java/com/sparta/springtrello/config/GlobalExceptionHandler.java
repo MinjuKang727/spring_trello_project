@@ -7,6 +7,7 @@ import com.sparta.springtrello.common.exception.InvalidRequestException;
 import jakarta.security.auth.message.AuthException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -45,6 +46,13 @@ public class GlobalExceptionHandler {
         HttpStatus status = HttpStatus.REQUEST_ENTITY_TOO_LARGE;
         return getErrorResponse(status, "파일 크기는 5MB를 초과할 수 없습니다.");
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<String>> notWorkspaceMember(AccessDeniedException ex) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        return getErrorResponse(status, "해당 자원에 접근할 권한이 없습니다.");
+    }
+
 
     public ResponseEntity<ApiResponse<String>> getErrorResponse(HttpStatus status, String message) {
 

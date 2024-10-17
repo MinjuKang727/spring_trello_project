@@ -23,4 +23,5 @@ public class CardSearchRequestDto {
     private String managerNickname;
     @FutureOrPresent(message = "마감일은 과거일 수 없습니다.")
     private Date deadline;
+    private Long boardId;
 }

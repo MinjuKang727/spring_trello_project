@@ -2,10 +2,12 @@ package com.sparta.springtrello.domain.manager.service;
 
 import com.sparta.springtrello.common.ErrorStatus;
 import com.sparta.springtrello.common.exception.ApiException;
-import com.sparta.springtrello.domain.card.dto.response.CardManagerChangedResponseDto;
+import com.sparta.springtrello.domain.manager.dto.request.GetManagersDto;
+import com.sparta.springtrello.domain.manager.dto.response.CardManagerChangedResponseDto;
 import com.sparta.springtrello.domain.card.entity.Card;
 import com.sparta.springtrello.domain.card.repository.CardRespository;
 import com.sparta.springtrello.domain.card.util.CardFinder;
+import com.sparta.springtrello.domain.manager.dto.response.ManagerResponseDto;
 import com.sparta.springtrello.domain.manager.entity.Manager;
 import com.sparta.springtrello.domain.manager.repository.ManagerQueryDslRepository;
 import com.sparta.springtrello.domain.manager.repository.ManagerRepository;
@@ -15,6 +17,9 @@ import com.sparta.springtrello.domain.member.repository.MemberQueryDslRepository
 import com.sparta.springtrello.domain.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -94,5 +99,12 @@ public class ManagerService {
                 foundManager.getMember().getUser().getId(),
                 foundManager.getMember().getUser().getNickname());
     }
+
+    //어떤 카드의 매니저 조회
+    public Page<ManagerResponseDto> getManagers(Long cardId, GetManagersDto requestDto) {
+        Pageable pageable = PageRequest.of(requestDto.getPage()-1, requestDto.getSize());
+        return managerQueryDslRepository.getManagers(cardId, pageable);
+    }
+
 }
 
