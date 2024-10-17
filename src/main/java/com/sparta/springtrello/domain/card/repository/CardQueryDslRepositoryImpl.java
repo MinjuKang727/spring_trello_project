@@ -39,10 +39,7 @@ public class CardQueryDslRepositoryImpl implements CardQueryDslRepository {
                 .from(card)
                 .leftJoin(manager).fetchJoin().on(manager.card.id.eq(card.id), manager.isDeleted.eq(false))
                 .where(
-                        titleContains(requestDto.getTitle()),
-                        beforeDeadline(requestDto.getDeadline()),
-                        managerNicknameContains(requestDto.getManagerNickname()),
-                        cardNotDeleted()
+                        searchConditions(requestDto)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -54,14 +51,21 @@ public class CardQueryDslRepositoryImpl implements CardQueryDslRepository {
                 .select(Wildcard.count)
                 .from(card)
                 .where(
-                        titleContains(requestDto.getTitle()),
-                        beforeDeadline(requestDto.getDeadline()),
-                        managerNicknameContains(requestDto.getManagerNickname()),
-                        cardNotDeleted()
+                        searchConditions(requestDto)
                 )
                 .fetchOne();
 
         return new PageImpl<>(results, pageable, totalCount);
+    }
+
+    private BooleanExpression[] searchConditions(CardSearchRequestDto requestDto) {
+        return new BooleanExpression[]{
+                titleContains(requestDto.getTitle()),
+                beforeDeadline(requestDto.getDeadline()),
+                managerNicknameContains(requestDto.getManagerNickname()),
+                cardsInBoard(requestDto.getBoardId()),
+                cardNotDeleted()
+        };
     }
 
     @Override
@@ -106,5 +110,12 @@ public class CardQueryDslRepositoryImpl implements CardQueryDslRepository {
     private BooleanExpression cardNotDeleted() {
         return card.isDeleted.eq(false);
     }
+
+    private BooleanExpression cardsInBoard(Long boardId) {
+        return boardId != null ? card.deck.board.id.eq(boardId) : null;
+    }
+
+
+
 
 }
