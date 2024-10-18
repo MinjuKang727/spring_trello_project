@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardRequestDto {
-
-    private  Long workspacesid;
     private  String title;
     private  String backgroundcolor;
     private  String backgroundimage;

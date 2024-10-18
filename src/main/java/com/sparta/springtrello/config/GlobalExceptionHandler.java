@@ -7,6 +7,7 @@ import com.sparta.springtrello.common.exception.InvalidRequestException;
 import jakarta.security.auth.message.AuthException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -38,6 +39,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<String>> handleAuthException(AuthException ex) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         return getErrorResponse(status, ex.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<String>> handleAccessDeniedException(AccessDeniedException ex) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        return getErrorResponse(status, "요청 URL에 접근 권한이 없습니다.");
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)

@@ -12,6 +12,7 @@ import com.sparta.springtrello.domain.deck.dto.response.DeckResponse;
 import com.sparta.springtrello.domain.deck.entity.Deck;
 import com.sparta.springtrello.domain.deck.repository.DeckRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -40,11 +43,13 @@ public class DeckService {
      */
     @Transactional
     public DeckCreateResponse createDeck(Long boardId, String deckName) {
-        Board board = this.boardRepository.findById(boardId).orElseThrow(
+        Board board = this.boardRepository.findBoardById(boardId).orElseThrow(
                 () -> new ApiException(ErrorStatus.NOT_FOUND_BOARD)
         );
 
-        Deck deck = new Deck(deckName, board);
+        int order = this.deckRepository.getDeckOrder(boardId);
+
+        Deck deck = new Deck(deckName, order, board);
         Deck savedDeck = this.deckRepository.save(deck);
 
         return new DeckCreateResponse(savedDeck);
@@ -57,7 +62,7 @@ public class DeckService {
      * @return request의 조건으로 조회한 덱 데이터를 DeckFindAllResponse 객체로 바인딩한 후, 페이징한 객체
      */
     public Page<DeckResponse> getDecks(DeckFindAllRequest request) {
-        Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), Sort.by(Sort.Direction.ASC, "order"));
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), Sort.by(Sort.Direction.ASC, "order"));
 
         return this.deckRepository.findAllByBoardId(request.getBoardId(), pageable);
     }
@@ -80,12 +85,15 @@ public class DeckService {
                 () -> new ApiException(ErrorStatus.NOT_FOUND_DECK)
         );
 
-        deckList.remove(deck.getOrder());
+        deckList.remove(deck.getOrder() - 1);
         deckList.add(request.getNewOrder() - 1, deck);
+
+        IntStream.range(0, deckList.size())
+                .forEach(i -> deckList.get(i).setOrder(i + 1));
 
         this.deckRepository.flush();
 
-        return new DeckResponse(deckList.get(request.getNewOrder()));
+        return new DeckResponse(deckList.get(request.getNewOrder() - 1));
 
     }
 
@@ -98,7 +106,7 @@ public class DeckService {
      */
     @Transactional
     public DeckResponse updateDeck(Long deckId, String deckName) {
-        Deck deck = this.deckRepository.findById(deckId).orElseThrow(
+        Deck deck = this.deckRepository.findDeckById(deckId).orElseThrow(
                 () -> new ApiException(ErrorStatus.NOT_FOUND_DECK)
         );
 
@@ -115,7 +123,7 @@ public class DeckService {
     @Transactional
     public void deleteDeck(Long deckId) {
 
-        Deck deck = this.deckRepository.findById(deckId).orElseThrow(
+        Deck deck = this.deckRepository.findDeckById(deckId).orElseThrow(
                 () -> new ApiException(ErrorStatus.NOT_FOUND_DECK)
         );
 

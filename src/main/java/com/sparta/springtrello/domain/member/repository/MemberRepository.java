@@ -10,13 +10,10 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberQueryDslRepository {
     @Query("SELECT m FROM Member m WHERE m.user = :user AND m.workspace = :workspace AND m.invitationStatus = :status")
     Optional<Member> findAcceptedMember(@Param("user") User user, @Param("workspace") Workspace workspace, @Param("status") InvitationStatus status);
 
 
     Optional<Member> findByUserAndWorkspace(User user, Workspace workspace);
-
-    @Query("SELECT m FROM Member m JOIN m.user JOIN m.workspace WHERE m.id = :memberId AND m.invitationStatus = 'ACCEPT'")
-    Optional<Member> findJoinMemberById(Long memberId);
 }

@@ -49,7 +49,7 @@ public class AuthService {
         UserRole userRole;
 
         // 관리자 키 검사
-        if(!request.getAdminKey().isEmpty()) {
+        if(request.getAdminKey() != null && !request.getAdminKey().isEmpty()) {
             if(adminKey.equals(request.getAdminKey())) {
                 userRole = UserRole.of("ROLE_ADMIN");
             } else {
@@ -58,7 +58,7 @@ public class AuthService {
         } else {
             userRole = UserRole.of("ROLE_USER");
         }
-//
+
 //        // 이메일 인증
 //        String redisKey = verifyEmail(request);
 //

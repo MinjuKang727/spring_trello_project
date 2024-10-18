@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
+    @Query("SELECT c FROM Comment c JOIN FETCH c.card WHERE c.isDeleted = false")
+    Optional<Comment> findCommentById(Long commentId);
 }

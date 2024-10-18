@@ -5,6 +5,7 @@ import com.sparta.springtrello.domain.user.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -40,8 +41,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("**").permitAll() // 임시
                         .requestMatchers("/test", "/admin/**").hasAuthority(UserRole.Authority.ADMIN)
+                        .requestMatchers(HttpMethod.POST, "/workspaces").hasAuthority(UserRole.Authority.ADMIN)
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(auth -> auth

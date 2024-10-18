@@ -19,7 +19,7 @@ public class BoardController {
     @PostMapping("/{workspacesId}/boards")
     public ResponseEntity<ApiResponse<BoardResponseDto>> createBoard(@RequestBody BoardRequestDto boardRequestDto,
                                                                      @PathVariable Long workspacesId) {
-       BoardResponseDto  createdBoard = boardService.createBoard(boardRequestDto);
+       BoardResponseDto  createdBoard = boardService.createBoard(boardRequestDto, workspacesId);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(createdBoard));
     }

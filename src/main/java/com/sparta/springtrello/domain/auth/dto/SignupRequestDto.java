@@ -1,5 +1,6 @@
 package com.sparta.springtrello.domain.auth.dto;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

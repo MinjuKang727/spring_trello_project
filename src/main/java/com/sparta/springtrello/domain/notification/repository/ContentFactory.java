@@ -68,22 +68,22 @@ public class ContentFactory {
     public Object getContent(NotificationCategory category, Long id) {
         return switch (category) {
             case WORKSPACE -> getWorkspaceRepository()
-                    .findById(id)
+                    .findWorkspaceById(id)
                     .orElseThrow(
                             () -> new ApiException(ErrorStatus.NOT_FOUND_WORKSPACE)
                     );
             case BOARD -> getBoardRepository()
-                    .findById(id)
+                    .findBoardById(id)
                     .orElseThrow(
                             () -> new ApiException(ErrorStatus.NOT_FOUND_BOARD)
                     );
             case DECK -> getDeckRepository()
-                    .findById(id)
+                    .findDeckById(id)
                     .orElseThrow(
                             () -> new ApiException(ErrorStatus.NOT_FOUND_DECK)
                     );
             case CARD -> getCardRepository()
-                    .findById(id)
+                    .findCardById(id)
                     .orElseThrow(
                             () -> new ApiException(ErrorStatus.NOT_FOUND_CARD)
                     );
@@ -93,7 +93,7 @@ public class ContentFactory {
                             () -> new ApiException(ErrorStatus.NOT_FOUND_MEMBER)
                     );
             case COMMENT -> getCommentRepository()
-                    .findById(id)
+                    .findCommentById(id)
                     .orElseThrow(
                             () -> new ApiException(ErrorStatus.NOT_FOUND_COMMENT)
                     );
@@ -102,8 +102,10 @@ public class ContentFactory {
     }
 
 
-    public String getMessage(String message, NotificationCategory category, Object content) {
+    public String getMessage(String message, NotificationCategory category, Object content, Workspace workspace) {
         sb.append(message);
+        sb.append("\n워크스페이스 이름 : ");
+        sb.append(workspace.getName());
 
         return switch (category) {
             case WORKSPACE -> getWorkspaceInfo((Workspace) content);
@@ -160,8 +162,6 @@ public class ContentFactory {
     }
 
     private String getWorkspaceInfo(Workspace workspace) {
-        sb.append("\n워크스페이스 이름 : ");
-        sb.append(workspace.getName());
         sb.append("\n관리자 : ");
         sb.append(workspace.getUser().getNickname());
 

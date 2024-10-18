@@ -19,23 +19,23 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BoardService {
 
-    private BoardRepository boardRepository;
-    private WorkspaceRepository workspaceRepository;
+    private final BoardRepository boardRepository;
+    private final WorkspaceRepository workspaceRepository;
     private final RedisUtil redisUtil;
 
     private static final String BOARD_DELETE_KEY = "board:";
 
-    public BoardResponseDto createBoard(BoardRequestDto boardRequestDto) {
+    public BoardResponseDto createBoard(BoardRequestDto boardRequestDto, Long workspacesId) {
 
         //workspaceID가져오기
-       Workspace workspace = workspaceRepository.findById(boardRequestDto.getWorkspacesid()).orElseThrow(() -> new ApiException(ErrorStatus.NOT_FOUND_WORKSPACE));
+       Workspace workspace = workspaceRepository.findById(workspacesId).orElseThrow(() -> new ApiException(ErrorStatus.NOT_FOUND_WORKSPACE));
         // 보드 생성하기
        Board board = new Board(boardRequestDto.getTitle(), workspace, boardRequestDto.getBackgroundcolor(), boardRequestDto.getBackgroundimage());
         // 생성한 보드 저장
        Board createBoard = boardRepository.save(board);
        return new BoardResponseDto(createBoard.getId(),
                createBoard.getTitle(),
-               boardRequestDto.getWorkspacesid(),
+               workspacesId,
                createBoard.getBackgroundcolor(),
                createBoard.getBackgroundimage(),
                createBoard.isDeleted()

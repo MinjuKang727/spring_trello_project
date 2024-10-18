@@ -3,7 +3,6 @@ package com.sparta.springtrello.domain.user.entity;
 import com.sparta.springtrello.common.Timestamped;
 import com.sparta.springtrello.domain.auth.dto.AuthUser;
 import com.sparta.springtrello.domain.member.entity.Member;
-import com.sparta.springtrello.domain.notification.entity.SlackUser;
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -64,14 +63,6 @@ public class User extends Timestamped {
         this.id = id;
         this.email = email;
         this.userRole = userRole;
-    }
-
-    public User(SlackUser slackUser, String password) {
-        this.email = slackUser.getEmail();
-        this.nickname = slackUser.getName();
-        this.password = password;
-        this.userRole = UserRole.ROLE_USER;
-        this.slackId = slackUser.getSlackId();
     }
 
     public static User fromAuthUser(AuthUser authUser) {
