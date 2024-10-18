@@ -1,7 +1,9 @@
 package com.sparta.springtrello.domain.member.entity;
 
 
+import com.sparta.springtrello.domain.member.enums.InvitationStatus;
 import com.sparta.springtrello.domain.member.enums.MemberRole;
+import com.sparta.springtrello.domain.user.entity.User;
 import com.sparta.springtrello.domain.workspace.entity.Workspace;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,29 +17,53 @@ import lombok.NoArgsConstructor;
 public class Member {
 
     @Id
+    @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", nullable = false) // 메뉴 id
-//    private User user;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "workspace_id", nullable = false) // 메뉴 id
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "workspace_id", nullable = false)
     private Workspace workspace;
 
     @Enumerated(EnumType.STRING)
-    private MemberRole memberRole;
+    private InvitationStatus invitationStatus = InvitationStatus.PENDING;
 
+    @Enumerated(EnumType.STRING)
+    private MemberRole memberRole = MemberRole.READ_ONLY;
 
-    // 유저 추가해야함
-    public Member(Workspace workspace, MemberRole memberRole) {
+    public Member(User user, Workspace workspace) {
+        this.user = user;
         this.workspace = workspace;
+    }
+
+    public Member(User user, Workspace workspace, InvitationStatus invitationStatus, MemberRole memberRole) {
+        this.user = user;
+        this.workspace = workspace;
+        this.invitationStatus = invitationStatus;
         this.memberRole = memberRole;
+    }
+
+    public void updateInvitationStatus(InvitationStatus invitationStatus) {
+        this.invitationStatus = invitationStatus;
     }
 
     public void updateRole(MemberRole memberRole) {
         this.memberRole = memberRole;
     }
+
+    public void setUser(User user) {
+        if (this.user != null) {
+            this.user.getMemberList().remove(this);
+        }
+        this.user = user;
+        if (user != null && !user.getMemberList().contains(this)) {
+            user.getMemberList().add(this);
+        }
+    }
+
 
 }

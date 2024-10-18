@@ -1,6 +1,10 @@
 package com.sparta.springtrello.domain.workspace.entity;
 
 
+import com.sparta.springtrello.domain.board.entity.Board;
+import com.sparta.springtrello.domain.member.entity.Member;
+import com.sparta.springtrello.domain.notification.entity.Notification;
+import com.sparta.springtrello.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,9 +18,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Workspace {
+
     @Id
+    @Column(name = "workspace_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long workspace_id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -25,31 +31,29 @@ public class Workspace {
     private String description;
 
     @Column
-    private Boolean is_deleted = false;
+    private boolean isDeleted;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", nullable = false)
-//    private User user;
+    private String slackChannelId;
 
-//    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
-//    private List<Board> boardList = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
-//    private List<Member> memberList = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
-//    private List<Notification> notificationList = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-//    public Workspace(String name, String description, User user) {
-//        this.name = name;
-//        this.description = description;
-//        this.user = user;
-//    }
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+    private List<Member> memberList = new ArrayList<>();
 
-    public Workspace(String name, String description) {
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+    private List<Board> boardList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+    private List<Notification> notificationList = new ArrayList<>();
+
+    public Workspace(String name, String description, User user) {
         this.name = name;
         this.description = description;
+        this.user = user;
     }
+
 
     public void update(String name, String description) {
         if (name != null) {
@@ -61,7 +65,10 @@ public class Workspace {
     }
 
     public void deleteWorkspace() {
-        is_deleted = true;
+        isDeleted = true;
     }
 
+    public void updateChannelId(String channelId) {
+        this.slackChannelId = channelId;
+    }
 }

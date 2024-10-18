@@ -1,19 +1,39 @@
 package com.sparta.springtrello.domain.deck.service;
 
-import com.sparta.springtrello.domain.deck.dto.response.DeckCreateResponse;
-import com.sparta.springtrello.domain.deck.repository.DeckRepository;
+import com.sparta.springtrello.common.ErrorStatus;
+import com.sparta.springtrello.common.RedisUtil;
+import com.sparta.springtrello.common.exception.ApiException;
+import com.sparta.springtrello.domain.board.entity.Board;
+import com.sparta.springtrello.domain.board.repository.BoardRepository;
 import com.sparta.springtrello.domain.deck.dto.request.DeckFindAllRequest;
+import com.sparta.springtrello.domain.deck.dto.request.DeckMoveRequest;
+import com.sparta.springtrello.domain.deck.dto.response.DeckCreateResponse;
+import com.sparta.springtrello.domain.deck.dto.response.DeckResponse;
+import com.sparta.springtrello.domain.deck.entity.Deck;
+import com.sparta.springtrello.domain.deck.repository.DeckRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.IntStream;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class DeckService {
 
     private final DeckRepository deckRepository;
+    private final BoardRepository boardRepository;
+    private final RedisUtil redisUtil;
+
+    private static final String DECK_DELETE_KEY = "deck:";
 
     /**
      * 덱 생성
@@ -23,7 +43,16 @@ public class DeckService {
      */
     @Transactional
     public DeckCreateResponse createDeck(Long boardId, String deckName) {
-        return null;
+        Board board = this.boardRepository.findBoardById(boardId).orElseThrow(
+                () -> new ApiException(ErrorStatus.NOT_FOUND_BOARD)
+        );
+
+        int order = this.deckRepository.getDeckOrder(boardId);
+
+        Deck deck = new Deck(deckName, order, board);
+        Deck savedDeck = this.deckRepository.save(deck);
+
+        return new DeckCreateResponse(savedDeck);
     }
 
 
@@ -32,20 +61,40 @@ public class DeckService {
      * @param request : 덱 조회 조건(워크스페이스 ID, 보드ID, 페이징 page, 페이징 크기)을 바인딩한 DeckFinaAllRequest 객체
      * @return request의 조건으로 조회한 덱 데이터를 DeckFindAllResponse 객체로 바인딩한 후, 페이징한 객체
      */
-    public Page<DeckCreateResponse> getDecks(DeckFindAllRequest request) {
-        return null;
+    public Page<DeckResponse> getDecks(DeckFindAllRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), Sort.by(Sort.Direction.ASC, "order"));
+
+        return this.deckRepository.findAllByBoardId(request.getBoardId(), pageable);
     }
 
 
     /**
      * 덱 이동
-     * @param boardId : 이동할 덱가 속한 보드 ID
-     * @param deckId : 이동할 덱 ID
-     * @param newOrder : 덱가 이동할 목표 위치
+     * @param request : 이동할 덱가 속한 보드 ID, 이동할 덱 ID, 덱이 이동할 목표 위치를 바인딩한 DeckMoveRequest 객체
      * @return 이동한 덱의 정보를 바인딩한 DeckResponse 객체
      */
-    public DeckCreateResponse moveDeck(Long boardId, Long deckId, int newOrder) {
-        return null;
+    @Transactional
+    public DeckResponse moveDeck(DeckMoveRequest request) {
+        List<Deck> deckList = this.deckRepository.findAllByBoardId(request.getBoardId());
+
+        if (deckList.isEmpty()) {
+            throw new ApiException(ErrorStatus.NO_DECK_IN_BOARD);
+        }
+
+        Deck deck = this.deckRepository.findById(request.getDeckId()).orElseThrow(
+                () -> new ApiException(ErrorStatus.NOT_FOUND_DECK)
+        );
+
+        deckList.remove(deck.getOrder() - 1);
+        deckList.add(request.getNewOrder() - 1, deck);
+
+        IntStream.range(0, deckList.size())
+                .forEach(i -> deckList.get(i).setOrder(i + 1));
+
+        this.deckRepository.flush();
+
+        return new DeckResponse(deckList.get(request.getNewOrder() - 1));
+
     }
 
 
@@ -55,8 +104,15 @@ public class DeckService {
      * @param deckName : 수정할 덱 이름
      * @return 수정된 덱 정보를 바인딩 한 DeckResponse 객체
      */
-    public DeckCreateResponse updateDeck(Long deckId, String deckName) {
-        return null;
+    @Transactional
+    public DeckResponse updateDeck(Long deckId, String deckName) {
+        Deck deck = this.deckRepository.findDeckById(deckId).orElseThrow(
+                () -> new ApiException(ErrorStatus.NOT_FOUND_DECK)
+        );
+
+        deck.setName(deckName);
+
+        return new DeckResponse(deck);
     }
 
 
@@ -64,7 +120,18 @@ public class DeckService {
      * 덱 삭제
      * @param deckId : 삭제할 덱 ID
      */
+    @Transactional
     public void deleteDeck(Long deckId) {
+
+        Deck deck = this.deckRepository.findDeckById(deckId).orElseThrow(
+                () -> new ApiException(ErrorStatus.NOT_FOUND_DECK)
+        );
+
+        deck.delete();
+
+        // redis에 1시간 저장 후 삭제
+        String redisKey = DECK_DELETE_KEY + deckId;
+        redisUtil.contentsDelete(redisKey, deck);
     }
 
 

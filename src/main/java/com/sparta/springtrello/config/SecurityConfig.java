@@ -1,9 +1,11 @@
 package com.sparta.springtrello.config;
 
+import com.sparta.springtrello.domain.auth.service.CustomOAuth2UserService;
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,10 +19,11 @@ import org.springframework.security.web.servletapi.SecurityContextHolderAwareReq
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtSecurityFilter jwtSecurityFilter;
+    private final CustomOAuth2UserService oAuth2UserService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -28,7 +31,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtUtil jwtUtil) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
@@ -37,8 +40,14 @@ public class SecurityConfig {
                 .addFilterBefore(jwtSecurityFilter, SecurityContextHolderAwareRequestFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .requestMatchers("/test", "/admin/**").hasAuthority(UserRole.Authority.ADMIN)
-                        .anyRequest().authenticated() // 그 외의 API는 JWT가 있어야해요!
+                        .requestMatchers(HttpMethod.POST, "/workspaces").hasAuthority(UserRole.Authority.ADMIN)
+                        .anyRequest().authenticated()
+                )
+                .oauth2Login(auth -> auth
+                        // OAuth2 로그인 성공 후 사용자 정보를 가져올 때 설정 담당)
+                        .userInfoEndpoint(user -> user.userService(oAuth2UserService))
                 )
                 .build();
     }

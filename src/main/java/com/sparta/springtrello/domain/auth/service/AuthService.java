@@ -1,11 +1,11 @@
 package com.sparta.springtrello.domain.auth.service;
 
+import com.sparta.springtrello.common.ErrorStatus;
+import com.sparta.springtrello.common.RedisUtil;
+import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.common.exception.AuthException;
 import com.sparta.springtrello.config.JwtUtil;
-import com.sparta.springtrello.domain.auth.dto.SigninRequestDto;
-import com.sparta.springtrello.domain.auth.dto.SigninResponseDto;
-import com.sparta.springtrello.domain.auth.dto.SignupRequestDto;
-import com.sparta.springtrello.domain.auth.dto.SignupResponseDto;
+import com.sparta.springtrello.domain.auth.dto.*;
 import com.sparta.springtrello.domain.user.entity.User;
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import com.sparta.springtrello.domain.user.repository.UserRepository;
@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.regex.Pattern;
-
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -23,6 +21,11 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final EmailService emailService;
+    private final RedisUtil redisUtil;
+
+    private static final String AUTH_EMAIL_KEY = "authEmail:";
+    private static final String WITHDRAW_KEY = "withdraw:";
 
     @Value("${admin.key}")
     private String adminKey;
@@ -30,23 +33,15 @@ public class AuthService {
     // 회원가입
     public SignupResponseDto signup(SignupRequestDto request) {
 
-        String email = request.getEmail();
-
-        // 이메일 유효성 검사
-        if(!validateEmail(email)) {
-            throw new IllegalArgumentException("이메일 형식이 올바르지 않습니다.");
-        }
-
-        // 이메일 중복 검사
+        // DB 이메일 중복 검사
         if(userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
+            throw new ApiException(ErrorStatus.EMAIL_NOT_AVAILABLE);
         }
 
-        String password = request.getPassword();
-
-        // 비밀번호 유효성 검사
-        if(!validatePassword(password)) {
-            throw new IllegalArgumentException("비밀번호 형식이 올바르지 않습니다.");
+        // redis 이메일 중복 검사
+        String withdrawRedisKey = WITHDRAW_KEY + request.getEmail();
+        if(redisUtil.get(withdrawRedisKey) != null) {
+            throw new ApiException(ErrorStatus.EMAIL_NOT_AVAILABLE);
         }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
@@ -54,7 +49,7 @@ public class AuthService {
         UserRole userRole;
 
         // 관리자 키 검사
-        if(!request.getAdminKey().isEmpty()) {
+        if(request.getAdminKey() != null && !request.getAdminKey().isEmpty()) {
             if(adminKey.equals(request.getAdminKey())) {
                 userRole = UserRole.of("ROLE_ADMIN");
             } else {
@@ -64,8 +59,14 @@ public class AuthService {
             userRole = UserRole.of("ROLE_USER");
         }
 
+//        // 이메일 인증
+//        String redisKey = verifyEmail(request);
+//
+//        // redis에서 데이터 제거
+//        redisUtil.delete(redisKey);
+
         User user = new User(
-                email,
+                request.getEmail(),
                 encodedPassword,
                 request.getNickname(),
                 userRole
@@ -73,7 +74,7 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
 
-        String bearerToken = jwtUtil.createToken(savedUser.getUserId(), savedUser.getEmail(), savedUser.getUserRole());
+        String bearerToken = jwtUtil.createToken(savedUser.getId(), savedUser.getEmail(), savedUser.getUserRole());
 
         return new SignupResponseDto(bearerToken);
     }
@@ -83,28 +84,35 @@ public class AuthService {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() ->
                 new IllegalArgumentException("가입되지 않은 유저입니다."));
 
+        if(user.isDeleted()) {
+            throw new IllegalArgumentException("탈퇴한 유저입니다.");
+        }
+
         if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new AuthException("잘못된 비밀번호입니다.");
         }
 
-        String bearerToken = jwtUtil.createToken(user.getUserId(), user.getEmail(), user.getUserRole());
+        String bearerToken = jwtUtil.createToken(user.getId(), user.getEmail(), user.getUserRole());
 
         return new SigninResponseDto(bearerToken);
     }
 
-    private boolean validateEmail(String email) {
-        // 이메일 정규표현식
-        // abc._.ab@abc.a.c or abc._.ab@abc.ac
-        String emailPattern = "^[\\w.]+@\\w+\\.\\w+(\\.\\w+)?";
+    private String verifyEmail(SignupRequestDto requestDto) {
+        String email = requestDto.getEmail();
+        String redisKey = AUTH_EMAIL_KEY + requestDto.getEmail();
+        Integer authNumber = (Integer) redisUtil.get(redisKey);
 
-        return Pattern.matches(emailPattern, email);
-    }
+        // 메일 인증 중인 email 인지 확인
+        if(authNumber == null) {
+            emailService.sendEmail(redisKey, email);
+            throw new ApiException(ErrorStatus.SEND_AUTH_EMAIL);
+        }
 
-    private boolean validatePassword(String password) {
-        // 비밀번호 정규표현식
-        // 대소문자 1개이상, 숫자 1개이상, 특수문자 1개이상, 8자리 이상 20자리 이하
-        String passwordPattern = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,20}$";
+        // 인증번호 확인
+        if(authNumber != requestDto.getAuthNumber()) {
+            throw new ApiException(ErrorStatus.FAIL_EMAIL_AUTHENTICATION);
+        }
 
-        return Pattern.matches(passwordPattern, password);
+        return redisKey;
     }
 }
