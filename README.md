@@ -56,18 +56,30 @@
 
 주요기능 및 로직의 흐름
 
+![image](https://github.com/user-attachments/assets/d13fb6b6-79dc-476c-9aac-dabd094a6a1e)
+
+
 주요기능 : 첨부파일 추가기능
 
 로직의 흐름 : 요청한 유저가 해당 카드의 매니저인지 확인 -> 들어온 멀티파트 파일 검증(확장자, 파일크기) -> 멀티파트 파일 > 파일로 변환 (UUID로 파일명에 고유값 부여) -> 서버의 Upload폴더의 저장 -> 저장된 파일주소 포함해서 응답 DTO반환
 
+![image](https://github.com/user-attachments/assets/067ea58f-236a-489a-9dd7-8c3ba24156ee)
+
+
 트러블 슈팅 : CI/CD의 필요성 
-코드리뷰 -> 빌드가 잘되는지 기능이 잘되는지 확실히 알지 못해 해결방법으로 기능을 작성하고 PR을 올리는 팀원이 테스트를 작성해서 기능이 검증을 하고 빌드는 잘 되는지 확인하고 PR을 작성한 뒤에 다른 팀원들이 더 꼼꼼하게 코드리뷰를 하는 방법이 있지만 수동으로 다 검증하는 작업은
-휴먼 에러 발생 가능성이 높습니다.
 
-그렇기 때문에 문제가 발생하였고 자동화 할수 있는 부분이라도 자동화해서 안되는 코드가 dev브랜치에 들어오는 일을 최소한으로 줄여야 합니다.
+![image](https://github.com/user-attachments/assets/859c2ec1-47e3-4f19-b240-0ce7641a5137)
 
-그래서 저희가 구상한 해결방안은 CI를 통한 자동화였습니다. 먼저 PR이 생성되면 CI가 파이프라인이 가동됩니다.
+![image](https://github.com/user-attachments/assets/c4cf30c4-4b89-47cf-b9c2-e9728dd7bf07)
 
-그리고 CI 서버에서 프로젝트 의존성 설치하고 Grradle빌드를 돌려서 빌드는 잘 되는지, 테스트는 통과하는지 확인합니다.
+![image](https://github.com/user-attachments/assets/e81e5a70-15f7-405d-9265-11b7abf11eea)
 
-그리고 빌드가 성공하면 테스트 커버리지를 넘었는지 확인합니다. 여기서는 예를 들어 40%라고 가정했습니다.
+![image](https://github.com/user-attachments/assets/5fb421dc-b733-4b52-bc5e-1df94cc86c5f)
+
+![image](https://github.com/user-attachments/assets/5b6f727d-1e98-43c2-b0c5-96e1854c5734)
+
+![image](https://github.com/user-attachments/assets/bd64a171-f10c-4254-b2f9-c3152845f950)
+
+![image](https://github.com/user-attachments/assets/5b02b5ec-10c1-4b19-9508-4d98cf279c93)
+
+![image](https://github.com/user-attachments/assets/d1bee6ef-5dd4-438e-aeb0-1397f6d9ffe1)
