@@ -4,19 +4,22 @@ import com.sparta.springtrello.common.ApiResponse;
 import com.sparta.springtrello.domain.board.dto.BoardRequestDto;
 import com.sparta.springtrello.domain.board.dto.BoardResponseDto;
 import com.sparta.springtrello.domain.board.service.BoardService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/workspaces")
+@RequestMapping("/workspaces")
+@RequiredArgsConstructor
 public class BoardController {
-    @Autowired
-    private BoardService boardService;
+
+    private final BoardService boardService;
 
     //보드 생성하기
     @PostMapping("/{workspacesId}/boards")
+
     public ResponseEntity<ApiResponse<BoardResponseDto>> createBoard(@RequestBody BoardRequestDto boardRequestDto,
                                                                      @PathVariable Long workspacesId) {
        BoardResponseDto  createdBoard = boardService.createBoard(boardRequestDto, workspacesId);
@@ -42,7 +45,7 @@ public class BoardController {
 
     // 보드 수정
     @PutMapping("/{workspacesId}/boards/{boardId}")
-    public ResponseEntity<ApiResponse<BoardResponseDto>> updateBoardById(@PathVariable Long workspacesId,Long boardId ,@RequestBody BoardRequestDto boardRequestDto){
+    public ResponseEntity<ApiResponse<BoardResponseDto>> updateBoardById(Long boardId ,@RequestBody BoardRequestDto boardRequestDto){
         BoardResponseDto updateBoard = boardService.updateBoard(boardId, boardRequestDto);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(updateBoard));

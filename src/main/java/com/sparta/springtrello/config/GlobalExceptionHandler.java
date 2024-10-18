@@ -41,17 +41,18 @@ public class GlobalExceptionHandler {
         return getErrorResponse(status, ex.getMessage());
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ApiResponse<String>> handleAccessDeniedException(AccessDeniedException ex) {
-        HttpStatus status = HttpStatus.FORBIDDEN;
-        return getErrorResponse(status, "요청 URL에 접근 권한이 없습니다.");
-    }
-
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ApiResponse<String>> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
         HttpStatus status = HttpStatus.REQUEST_ENTITY_TOO_LARGE;
         return getErrorResponse(status, "파일 크기는 5MB를 초과할 수 없습니다.");
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<String>> notWorkspaceMember(AccessDeniedException ex) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        return getErrorResponse(status, "해당 자원에 접근할 권한이 없습니다.");
+    }
+
 
     public ResponseEntity<ApiResponse<String>> getErrorResponse(HttpStatus status, String message) {
 

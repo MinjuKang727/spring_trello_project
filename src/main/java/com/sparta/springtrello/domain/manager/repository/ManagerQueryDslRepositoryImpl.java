@@ -1,12 +1,21 @@
 package com.sparta.springtrello.domain.manager.repository;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.springtrello.common.ErrorStatus;
 import com.sparta.springtrello.common.exception.ApiException;
+import com.sparta.springtrello.domain.manager.dto.response.ManagerResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+import static com.sparta.springtrello.domain.card.entity.QCard.card;
 import static com.sparta.springtrello.domain.manager.entity.QManager.manager;
 
 @Repository
@@ -48,5 +57,34 @@ public class ManagerQueryDslRepositoryImpl implements ManagerQueryDslRepository 
         return manager.isDeleted.eq(false);
     }
 
+    @Override
+    public Page<ManagerResponseDto> getManagers(Long cardId, Pageable pageable) {
+        List<ManagerResponseDto> results = jpaQueryFactory
+                .select(
+                        Projections.constructor(
+                                ManagerResponseDto.class,
+                                manager.id,
+                                manager.member.user.id,
+                                manager.member.user.nickname
+                        )
+                )
+                .from(manager)
+                .where(
+                        managerCardIdEq(cardId)
+                                .and(managerIsNotDeleted())
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long totalCount = jpaQueryFactory
+                .select(Wildcard.count)
+                .from(manager)
+                .where(
+                        managerCardIdEq(cardId)
+                )
+                .fetchOne();
+        return new PageImpl<>(results,pageable,totalCount);
+    }
 
 }

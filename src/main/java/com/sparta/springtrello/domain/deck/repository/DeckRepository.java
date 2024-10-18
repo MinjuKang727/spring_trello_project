@@ -1,6 +1,5 @@
 package com.sparta.springtrello.domain.deck.repository;
 
-import com.sparta.springtrello.domain.card.entity.Card;
 import com.sparta.springtrello.domain.deck.dto.response.DeckResponse;
 import com.sparta.springtrello.domain.deck.entity.Deck;
 import org.springframework.data.domain.Page;

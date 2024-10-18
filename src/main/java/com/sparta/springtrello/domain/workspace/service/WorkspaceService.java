@@ -6,6 +6,10 @@ import com.sparta.springtrello.common.GlobalUtil;
 import com.sparta.springtrello.common.RedisUtil;
 import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.domain.auth.dto.AuthUser;
+import com.sparta.springtrello.domain.member.entity.Member;
+import com.sparta.springtrello.domain.member.enums.InvitationStatus;
+import com.sparta.springtrello.domain.member.enums.MemberRole;
+import com.sparta.springtrello.domain.member.repository.MemberRepository;
 import com.sparta.springtrello.domain.user.entity.User;
 import com.sparta.springtrello.domain.workspace.dto.WorkspaceRequestDto;
 import com.sparta.springtrello.domain.workspace.dto.WorkspaceResponseDto;
@@ -25,6 +29,7 @@ import java.util.List;
 public class WorkspaceService {
 
     private final WorkspaceRepository workspaceRepository;
+    private final MemberRepository memberRepository;
     private final RedisUtil redisUtil;
 
     private static final String WORKSPACE_DELETE_KEY = "workspace:";
@@ -42,6 +47,14 @@ public class WorkspaceService {
         );
         Workspace savedWorkspace = workspaceRepository.save(newWorkspace);
 
+        Member member = new Member(
+                user,
+                newWorkspace,
+                InvitationStatus.ACCEPT,
+                MemberRole.WORKSPACE
+        );
+        memberRepository.save(member);
+        
         return new WorkspaceResponseDto(
                 savedWorkspace.getId(),
                 savedWorkspace.getName(),

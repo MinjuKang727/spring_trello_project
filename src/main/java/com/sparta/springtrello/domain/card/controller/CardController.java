@@ -1,15 +1,13 @@
 package com.sparta.springtrello.domain.card.controller;
 
 import com.sparta.springtrello.annotation.RequestedMember;
+import com.sparta.springtrello.annotation.WorkspaceAccessAuthorize;
 import com.sparta.springtrello.annotation.WorkspaceAccessButReadOnlyAuthorize;
 import com.sparta.springtrello.common.ApiResponse;
 import com.sparta.springtrello.domain.card.dto.request.CardCreateRequestDto;
 import com.sparta.springtrello.domain.card.dto.request.CardSearchRequestDto;
 import com.sparta.springtrello.domain.card.dto.request.CardUpdateRequestDto;
-import com.sparta.springtrello.domain.card.dto.response.CardAttachmentResponseDto;
-import com.sparta.springtrello.domain.card.dto.response.CardCreateResponseDto;
-import com.sparta.springtrello.domain.card.dto.response.CardSearchResponseDto;
-import com.sparta.springtrello.domain.card.dto.response.CardUpdateResponseDto;
+import com.sparta.springtrello.domain.card.dto.response.*;
 import com.sparta.springtrello.domain.card.service.CardAttachmentService;
 import com.sparta.springtrello.domain.card.service.CardService;
 import com.sparta.springtrello.domain.member.entity.Member;
@@ -24,6 +22,7 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/workspaces/{workspaceId}/boards/{boardId}/decks/{deckId}/")
 public class CardController {
     private final CardService cardService;
     private final CardAttachmentService cardAttachmentService;
@@ -38,7 +37,7 @@ public class CardController {
      * @return : 카드Id, 카드title 를 담아서 반환하는 responseDto
      */
     @WorkspaceAccessButReadOnlyAuthorize
-    @PostMapping("/workspaces/{workspaceId}/boards/{boardId}/decks/{deckId}")
+    @PostMapping("/cards")
     public ResponseEntity<ApiResponse<CardCreateResponseDto>> create(@PathVariable Long workspaceId,
                                                                      @PathVariable Long boardId,
                                                                      @PathVariable Long deckId,
@@ -50,7 +49,7 @@ public class CardController {
 
     //카드 수정
     @WorkspaceAccessButReadOnlyAuthorize
-    @PutMapping("/workspaces/{workspaceId}/boards/{boardId}/decks/{deckId}/{cardId}")
+    @PutMapping("/cards/{cardId}")
     public ResponseEntity<ApiResponse<CardUpdateResponseDto>> update(@PathVariable Long workspaceId,
                                                                      @PathVariable Long boardId,
                                                                      @PathVariable Long deckId,
@@ -61,7 +60,8 @@ public class CardController {
     }
 
     //카드에 파일 첨부
-    @PostMapping("/workspaces/{workspaceId}/boards/{boardId}/decks/{deckId}/{cardId}")
+    @WorkspaceAccessButReadOnlyAuthorize
+    @PostMapping("/cards/{cardId}")
     public ResponseEntity<ApiResponse<CardAttachmentResponseDto>> attachFileToFile(@PathVariable Long workspaceId,
                                                                       @PathVariable Long boardId,
                                                                       @PathVariable Long deckId,
@@ -72,7 +72,8 @@ public class CardController {
     }
 
     //카드 삭제
-    @DeleteMapping("/workspaces/{workspaceId}/boards/{boardId}/decks/{deckId}/{cardId}")
+    @WorkspaceAccessButReadOnlyAuthorize
+    @DeleteMapping("/cards/{cardId}")
     public ResponseEntity<ApiResponse<String>> delete(@PathVariable Long workspaceId,
                                                       @PathVariable Long boardId,
                                                       @PathVariable Long deckId,
@@ -82,13 +83,35 @@ public class CardController {
     }
 
     //카드 검색
-    @GetMapping("/workspaces/{workspaceId}/boards/{boardId}/decks/{deckId}/cards/search")
+    @WorkspaceAccessAuthorize
+    @GetMapping("/cards/search")
     public ResponseEntity<ApiResponse<Page<CardSearchResponseDto>>> search(@PathVariable Long workspaceId,
                                                                            @PathVariable Long boardId,
                                                                            @PathVariable Long deckId,
                                                                            @RequestBody @Valid CardSearchRequestDto requestDto) {
         return ResponseEntity.ok(ApiResponse.onSuccess(cardService.searchCards(requestDto)));
     }
+
+    //카드 단건 상세조회
+    @WorkspaceAccessAuthorize
+    @GetMapping("/cards/{cardId}")
+    public ResponseEntity<ApiResponse<CardDetailsResponseDto>> getCardDetails(@PathVariable Long workspaceId,
+                                                                              @PathVariable Long boardId,
+                                                                              @PathVariable Long deckId,
+                                                                              @PathVariable Long cardId) {
+        return ResponseEntity.ok(ApiResponse.onSuccess(cardService.getCardDetails(cardId)));
+    }
+
+    //카드 덱 이동
+    @PutMapping("/cards/{cardId}/moving")
+    public ResponseEntity<ApiResponse<CardDeckMoveResponseDto>> moveCardDeck(@PathVariable Long workspaceId,
+                                                                             @PathVariable Long boardId,
+                                                                             @PathVariable Long deckId,
+                                                                             @PathVariable Long cardId,
+                                                                             @RequestParam Long afterDeckId) {
+        return ResponseEntity.ok(ApiResponse.onSuccess(cardService.moveCardToAnotherDeck(cardId,afterDeckId)));
+    }
+
 
 }
 
