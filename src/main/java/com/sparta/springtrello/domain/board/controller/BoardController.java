@@ -10,15 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/workspaces")
+@RequestMapping("/workspaces")
 public class BoardController {
     @Autowired
     private BoardService boardService;
 
     //보드 생성하기
     @PostMapping("/{workspacesId}/boards")
-    public ResponseEntity<ApiResponse<BoardResponseDto>> createBoard(@RequestBody BoardRequestDto boardRequestDto,
-                                                                     @PathVariable Long workspacesId) {
+    public ResponseEntity<ApiResponse<BoardResponseDto>> createBoard(@RequestBody BoardRequestDto boardRequestDto) {
        BoardResponseDto  createdBoard = boardService.createBoard(boardRequestDto);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(createdBoard));
@@ -42,7 +41,7 @@ public class BoardController {
 
     // 보드 수정
     @PutMapping("/{workspacesId}/boards/{boardId}")
-    public ResponseEntity<ApiResponse<BoardResponseDto>> updateBoardById(@PathVariable Long workspacesId,Long boardId ,@RequestBody BoardRequestDto boardRequestDto){
+    public ResponseEntity<ApiResponse<BoardResponseDto>> updateBoardById(Long boardId ,@RequestBody BoardRequestDto boardRequestDto){
         BoardResponseDto updateBoard = boardService.updateBoard(boardId, boardRequestDto);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(updateBoard));
