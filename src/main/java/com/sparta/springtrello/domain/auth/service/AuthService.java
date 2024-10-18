@@ -49,7 +49,7 @@ public class AuthService {
         UserRole userRole;
 
         // 관리자 키 검사
-        if(!request.getAdminKey().isEmpty()) {
+        if(request.getAdminKey() != null && !request.getAdminKey().isEmpty()) {
             if(adminKey.equals(request.getAdminKey())) {
                 userRole = UserRole.of("ROLE_ADMIN");
             } else {
@@ -59,11 +59,11 @@ public class AuthService {
             userRole = UserRole.of("ROLE_USER");
         }
 
-        // 이메일 인증
-        String redisKey = verifyEmail(request);
-
-        // redis에서 데이터 제거
-        redisUtil.delete(redisKey);
+//        // 이메일 인증
+//        String redisKey = verifyEmail(request);
+//
+//        // redis에서 데이터 제거
+//        redisUtil.delete(redisKey);
 
         User user = new User(
                 request.getEmail(),
@@ -114,9 +114,5 @@ public class AuthService {
         }
 
         return redisKey;
-    }
-
-    public static User fromAuthUser(AuthUser authUser) {
-        return new User(authUser.getId(), authUser.getEmail(), authUser.getUserRole());
     }
 }

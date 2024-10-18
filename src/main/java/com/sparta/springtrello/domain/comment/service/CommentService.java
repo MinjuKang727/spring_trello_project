@@ -4,7 +4,7 @@ import com.sparta.springtrello.common.ErrorStatus;
 import com.sparta.springtrello.common.RedisUtil;
 import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.domain.card.entity.Card;
-import com.sparta.springtrello.domain.card.repository.CardRespository;
+import com.sparta.springtrello.domain.card.repository.CardRepository;
 import com.sparta.springtrello.domain.comment.dto.CommentRequestDto;
 import com.sparta.springtrello.domain.comment.dto.CommentResponseDto;
 import com.sparta.springtrello.domain.comment.entity.Comment;
@@ -17,14 +17,14 @@ import org.springframework.stereotype.Service;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final CardRespository cardRespository;
+    private final CardRepository cardRepository;
     private final RedisUtil redisUtil;
 
     private static final String COMMENT_DELETE_KEY = "comment:";
 
     public CommentResponseDto createComment( Long cardId, CommentRequestDto commentRequestDto){
         //카드가 존재하는지 확인
-        Card card = cardRespository.findById(cardId).orElseThrow(() -> new ApiException(ErrorStatus.NOT_FOUND_CARD));
+        Card card = cardRepository.findById(cardId).orElseThrow(() -> new ApiException(ErrorStatus.NOT_FOUND_CARD));
         //댓글 생성
         Comment comment = new Comment(null, card, commentRequestDto.getContents());
         commentRepository.save(comment);

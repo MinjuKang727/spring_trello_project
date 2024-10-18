@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ManagerUtil {
     private final ManagerRepository managerRepository;
-    private final ManagerQueryDslRepository managerQueryDslRepository;
 
     //담당자 등록 기능 메서드
     public void createManager(Card card, Member member) {
@@ -24,7 +23,7 @@ public class ManagerUtil {
 
     //요청한 유저가 요청한 카드의 매니저인지 검증
     public void validateCardManager(Member member, Card card) {
-        if(!managerQueryDslRepository.isMemberManager(card.getId(),member.getId())) {
+        if(!managerRepository.isMemberManager(card.getId(),member.getId())) {
             throw new ApiException(ErrorStatus.FORBIDDEN_NOT_MANAGER);
         }
     }

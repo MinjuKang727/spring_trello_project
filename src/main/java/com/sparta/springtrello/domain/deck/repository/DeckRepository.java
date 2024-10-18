@@ -9,14 +9,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface DeckRepository extends JpaRepository<Deck, Long> {
+public interface DeckRepository extends JpaRepository<Deck, Long>, DeckQueryDslRepository {
 
-    @Query("SELECT d FROM Deck d WHERE d.board.id = :boardId")
-    Page<DeckResponse> findAllByBoardId(Long boardId, Pageable pageable);
-
-    @Query("SELECT d FROM Deck d WHERE d.board.id = :boardId ORDER BY d.order ASC")
+    @Query("SELECT d FROM Deck d WHERE d.board.id = :boardId AND d.isDeleted = false ORDER BY d.order ASC")
     List<Deck> findAllByBoardId(Long boardId);
+
+    @Query("SELECT d FROM Deck d WHERE d.id = :deckId AND d.isDeleted = false")
+    Optional<Deck> findDeckById(Long deckId);
+
+    @Query("SELECT count(d) + 1 FROM Deck d WHERE d.board.id = :boardId AND d.isDeleted = false")
+    int getDeckOrder(Long boardId);
 
 }

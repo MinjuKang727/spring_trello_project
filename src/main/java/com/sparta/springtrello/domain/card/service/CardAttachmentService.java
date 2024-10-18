@@ -4,7 +4,7 @@ import com.sparta.springtrello.common.ErrorStatus;
 import com.sparta.springtrello.common.exception.ApiException;
 import com.sparta.springtrello.domain.card.dto.response.CardAttachmentResponseDto;
 import com.sparta.springtrello.domain.card.entity.Card;
-import com.sparta.springtrello.domain.card.repository.CardRespository;
+import com.sparta.springtrello.domain.card.repository.CardRepository;
 import com.sparta.springtrello.domain.card.util.CardFinder;
 import com.sparta.springtrello.domain.manager.repository.ManagerRepository;
 import com.sparta.springtrello.domain.manager.util.ManagerUtil;
@@ -25,7 +25,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CardAttachmentService {
     private final CardFinder cardFinder;
-    private final CardRespository cardRespository;
+    private final CardRepository cardRepository;
     private final ManagerRepository managerRepository;
     private final ManagerUtil managerUtil;
 
@@ -44,7 +44,7 @@ public class CardAttachmentService {
         String url = upload(file);
         //Card 객체에 url 담아서 저장
         card.setAttachmentUrl(url);
-        cardRespository.save(card);
+        cardRepository.save(card);
 
         return new CardAttachmentResponseDto(
                 card.getId(), card.getTitle(), url

@@ -14,4 +14,6 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
 
     List<Workspace> findAllByUser(User user);
 
+    @Query("SELECT w FROM Workspace w JOIN FETCH w.user WHERE w.isDeleted = false")
+    Optional<Workspace> findWorkspaceById(Long workspaceId);
 }

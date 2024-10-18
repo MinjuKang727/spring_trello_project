@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface ManagerRepository extends JpaRepository<Manager,Long> {
+public interface ManagerRepository extends JpaRepository<Manager,Long>, ManagerQueryDslRepository {
     @Query("SELECT m FROM Manager m WHERE m.member.id = :memberId AND m.isDeleted = false")
     Optional<Manager> findByMemberId(@Param("memberId") Long memberId);
 }

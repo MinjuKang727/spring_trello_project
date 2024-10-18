@@ -9,7 +9,7 @@ import com.sparta.springtrello.domain.card.dto.request.CardUpdateRequestDto;
 import com.sparta.springtrello.domain.card.dto.response.*;
 import com.sparta.springtrello.domain.card.entity.Card;
 import com.sparta.springtrello.domain.card.repository.CardQueryDslRepository;
-import com.sparta.springtrello.domain.card.repository.CardRespository;
+import com.sparta.springtrello.domain.card.repository.CardRepository;
 import com.sparta.springtrello.domain.card.util.CardFinder;
 import com.sparta.springtrello.domain.deck.entity.Deck;
 import com.sparta.springtrello.domain.deck.util.DeckFinder;
@@ -18,6 +18,7 @@ import com.sparta.springtrello.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CardService{
 
     private final CardQueryDslRepository cardQueryDslRepository;
-    private final CardRespository cardRespository;
+    private final CardRepository cardRepository;
     private final CardFinder cardFinder;
     private final DeckFinder deckFinder;
     private final ManagerUtil managerUtil;
@@ -49,7 +50,7 @@ public class CardService{
         //카드 담당자 등록
         managerUtil.createManager(card, requestedMember);
 
-        Card savedCard = cardRespository.save(card);
+        Card savedCard = cardRepository.save(card);
 
         return new CardCreateResponseDto(
                 savedCard.getId(),
@@ -67,7 +68,7 @@ public class CardService{
         managerUtil.validateCardManager(requestedMember,card);
 
         card.update(requestDto);
-        Card savedCard = cardRespository.save(card);
+        Card savedCard = cardRepository.save(card);
         return new CardUpdateResponseDto(
                 savedCard.getId(),
                 savedCard.getTitle(),
@@ -131,7 +132,7 @@ public class CardService{
 
         Deck afterDeck = deckFinder.findById(afterDeckId);
         card.assignCard(afterDeck);
-        cardRespository.save(card);
+        cardRepository.save(card);
         return new CardDeckMoveResponseDto(cardId, beforeDeckId ,afterDeckId);
     }
 

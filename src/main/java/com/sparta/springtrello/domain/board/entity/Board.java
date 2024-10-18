@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Getter
 @Entity
@@ -26,7 +27,6 @@ public class Board {
     private Workspace workspace;
   
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderColumn(name = "deck_order")  // 순서 칼럼 지정
     private List<Deck> deckList = new ArrayList<>();
 
     @Column(name = "is_deleted")
@@ -41,12 +41,13 @@ public class Board {
         this.backgroundcolor = backgroundColor;
         this.backgroundimage = backgroundImage;
     }
+
     public void updateBoard(String title, String backgroundColor, String backgroundImage) {
         this.title = title;
         this.backgroundcolor = backgroundColor;
         this.backgroundimage = backgroundImage;
     }
-    public void Deleted() {
+    public void deleted() {
         this.isDeleted = true;
     }
 }

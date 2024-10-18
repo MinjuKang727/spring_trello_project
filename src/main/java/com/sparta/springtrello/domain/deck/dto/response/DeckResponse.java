@@ -14,4 +14,10 @@ public class DeckResponse {
         this.name = deck.getName();
         this.order = deck.getOrder();
     }
+
+    public DeckResponse(Long id, String name, int order) {
+        this.id = id;
+        this.name = name;
+        this.order = order;
+    }
 }

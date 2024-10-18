@@ -1,6 +1,7 @@
 package com.sparta.springtrello.domain.workspace.controller;
 
 
+import com.sparta.springtrello.annotation.NotifyEvent;
 import com.sparta.springtrello.common.ApiResponse;
 import com.sparta.springtrello.domain.auth.dto.AuthUser;
 import com.sparta.springtrello.domain.workspace.dto.WorkspaceRequestDto;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.sparta.springtrello.domain.notification.enums.NotificationCategory.WORKSPACE;
+import static com.sparta.springtrello.domain.notification.enums.NotificationMessage.*;
+
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -22,6 +26,7 @@ public class WorkspaceController {
     private final WorkspaceService workspaceService;
 
     // 생성
+    @NotifyEvent(message = WORKSPACE_CREATED, category = WORKSPACE)
     @PostMapping("/workspaces")
     public ResponseEntity<ApiResponse<WorkspaceResponseDto>> createWorkspace(
             @AuthenticationPrincipal AuthUser authUser,
@@ -51,6 +56,7 @@ public class WorkspaceController {
     }
 
     // 수정
+    @NotifyEvent(message = WORKSPACE_UPDATED, category = WORKSPACE)
     @PutMapping("/workspaces/{workspaceId}")
     public ResponseEntity<ApiResponse<WorkspaceResponseDto>> update(
             @AuthenticationPrincipal AuthUser authUser,
@@ -62,6 +68,7 @@ public class WorkspaceController {
     }
 
     // 삭제
+    @NotifyEvent(message = WORKSPACE_DELETED, category = WORKSPACE)
     @DeleteMapping("/workspaces/{workspaceId}")
     public ResponseEntity<ApiResponse<Void>> delete(
             @AuthenticationPrincipal AuthUser authUser,

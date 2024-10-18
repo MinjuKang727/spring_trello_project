@@ -18,8 +18,6 @@ public enum ErrorStatus implements BaseCode {
     FORBIDDEN_TOKEN(HttpStatus.FORBIDDEN, 403, "관리자 권한이 없습니다."),
     NOT_FOUND_TOKEN(HttpStatus.NOT_FOUND, 404, "JWT 토큰이 필요합니다."),
 
-    //리스트 관련 예외
-    NOT_FOUND_DECK(HttpStatus.NOT_FOUND,404,"해당 덱을 찾을 수 없습니다."),
 
     //워크스페이스 관련 예외
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, 404, "해당 유저를 찾을 수 없습니다."),
@@ -35,6 +33,7 @@ public enum ErrorStatus implements BaseCode {
     NOT_FOUND_BOARD(HttpStatus.NOT_FOUND, 404, "해당 보드를 찾을 수 없습니다."),
 
     // 덱 관련 예외
+    NOT_FOUND_DECK(HttpStatus.NOT_FOUND, 404, "해당 덱을 찾을 수 없습니다."),
     NOT_MOVED_DECK(HttpStatus.BAD_REQUEST, 400, "덱이 이동하지 않았습니다."),
     NO_DECK_IN_BOARD(HttpStatus.BAD_REQUEST, 400, "해당 보드에 덱이 존재하지 않습니다."),
 
@@ -52,13 +51,15 @@ public enum ErrorStatus implements BaseCode {
 
     //매니저 관련 예외
     NOT_FOUND_MANAGER(HttpStatus.NOT_FOUND,404,"해당 매니저를 찾을 수 없습니다."),
-    BAD_REQUEST_INVALID_CARD_OR_MEMBER(HttpStatus.BAD_REQUEST,400,"카드ID나 멤버ID가 유효하지 않습니다."),
-    BAD_REQUEST_ALREADY_MANAGER(HttpStatus.BAD_REQUEST,400,"해당 유저는 이미 해당 카드의 매니저입니다."),
+    BAD_REQUEST_ALREADY_MANAGER(HttpStatus.BAD_REQUEST, 400, "해당 유저는 이미 매니저입니다."),
+
 
     //멤버 관련 예외
     NOT_FOUND_MEMBER(HttpStatus.NOT_FOUND,404,"해당 멤버를 찾을 수 없습니다."),
     FORBIDDEN_NOT_MANAGER(HttpStatus.FORBIDDEN,403,"현재 요청 멤버가 카드의 매니저가 아닙니다."),
     BAD_REQUEST_NOT_MANAGER(HttpStatus.BAD_REQUEST,400,"해당 멤버는 카드의 매니저가 아닙니다."),
+    BAD_REQUEST_INVALID_CARD_OR_MEMBER(HttpStatus.BAD_REQUEST, 400, "유효하지 않은 카드 혹은 멤버 정보입니다."),
+
 
     //이메일 인증 관련 예외
     FAIL_EMAIL_SENDING(HttpStatus.INTERNAL_SERVER_ERROR, 500, "이메일 전송에 실패했습니다."),
@@ -69,7 +70,19 @@ public enum ErrorStatus implements BaseCode {
     // 인증 정보 관련 예외
     NOT_FOUND_AUTHENTICATION(HttpStatus.FORBIDDEN, 403, "인증 정보를 찾을 수 없습니다."),
 
+    // 슬랙 관련 예외
+    UNAUTHORIZED_INVALID_STATE(HttpStatus.UNAUTHORIZED, 401, "유효하지 않은 State 입니다."),
+    SLACK_ACCESSTOKEN_REQUEST_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 500, "엑세스 토큰 요청 중, 문제가 발생하였습니다."),
+    SLACK_FETCH_USER_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 500, "유저 목록을 가져오던 중, 문제가 발생하였습니다."),
+    SLACK_SEND_MESSAGE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 500, "슬랙 메시지 전송 실패"),
+    BAD_REQUEST_CONTENT_CATEGORY(HttpStatus.BAD_REQUEST, 400, "유효하지 않은 컨텐츠 카테고리입니다."),
+    NOT_SLACK_USER(HttpStatus.BAD_REQUEST, 400, "슬랙 유저 정보가 존재하지 않아 알람을 보낼 수 없습니다."),
+    SLACK_CREATE_CHANNEL_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 500, "워크스페이스 알람용 채널 생성에 실패하였습니다."),
+    SLACK_INVITE_MEMBER_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 500, "슬랙 채널 초대 실패"),
+    SLACK_DM_CHANNEL_CONNECTION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 500, "슬랙 DM 채널 연결 실패"),
+
     TEST_ERROR(HttpStatus.BAD_REQUEST, 400, "ApiException 예외 처리 테스트");
+
 
 
     private final HttpStatus httpStatus;

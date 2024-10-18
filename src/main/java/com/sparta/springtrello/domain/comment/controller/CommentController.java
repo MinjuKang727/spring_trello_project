@@ -16,12 +16,14 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    // 댓글 생성
     @PostMapping("/{cardId}/comments")
     public ResponseEntity<ApiResponse<CommentResponseDto>> createComment(@PathVariable Long cardId, @RequestBody CommentRequestDto commentRequestDto){
         CommentResponseDto responseDto = commentService.createComment(cardId,commentRequestDto);
         return ResponseEntity.ok(ApiResponse.onSuccess(responseDto));
     }
 
+    // 댓글 수정
     @PutMapping("/{cardId}/comments/{commentId}")
     public ResponseEntity<ApiResponse<CommentResponseDto>> updateComment(
             @PathVariable Long cardId,
@@ -34,6 +36,7 @@ public class CommentController {
         return ResponseEntity.ok(ApiResponse.onSuccess(responseDto));
     }
 
+    // 댓글 삭제
     @DeleteMapping("/{cardId}/comments/{commentId}")
     public ResponseEntity<ApiResponse<Void>> deleteComment(@PathVariable Long commentId){
 

@@ -32,8 +32,9 @@ public class Deck {
     @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Card> cardList = new ArrayList<>();
 
-    public Deck(String name, Board board) {
+    public Deck(String name, int order, Board board) {
         this.name = name;
+        this.order = order;
         this.board = board;
     }
 

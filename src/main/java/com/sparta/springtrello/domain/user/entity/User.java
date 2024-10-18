@@ -3,20 +3,17 @@ package com.sparta.springtrello.domain.user.entity;
 import com.sparta.springtrello.common.Timestamped;
 import com.sparta.springtrello.domain.auth.dto.AuthUser;
 import com.sparta.springtrello.domain.member.entity.Member;
-import com.sparta.springtrello.domain.notification.entity.SlackUser;
 import com.sparta.springtrello.domain.user.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
-
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Entity
 @Getter
 @RequiredArgsConstructor
-@Table(name = "users")
 public class User extends Timestamped {
 
     @Id
@@ -41,15 +38,15 @@ public class User extends Timestamped {
     private Long kakaoId;
     private String slackId;
 
+    @OneToMany(mappedBy = "user")
+    List<Member> memberList = new ArrayList<>();
+
     public User(String nickname, String email, UserRole userRole, Long kakaoId) {
         this.nickname = nickname;
         this.email = email;
         this.userRole = userRole;
         this.kakaoId = kakaoId;
     }
-
-    @OneToMany(mappedBy = "user")
-    List<Member> memberList = new ArrayList<>();
 
     public User(String email, String password, String nickname, UserRole userRole) {
         this.email = email;
@@ -68,14 +65,6 @@ public class User extends Timestamped {
         this.userRole = userRole;
     }
 
-    public User(SlackUser slackUser, String password) {
-        this.email = slackUser.getEmail();
-        this.nickname = slackUser.getName();
-        this.password = password;
-        this.userRole = UserRole.ROLE_USER;
-        this.slackId = slackUser.getSlackId();
-    }
-
     public static User fromAuthUser(AuthUser authUser) {
         return new User(authUser.getId(), authUser.getEmail(), authUser.getUserRole());
     }
@@ -84,9 +73,7 @@ public class User extends Timestamped {
         this.isDeleted = true;
     }
 
-    public User slackIdUpdate(String slackId) {
+    public void updateSleckId(String slackId) {
         this.slackId = slackId;
-
-        return this;
     }
 }
